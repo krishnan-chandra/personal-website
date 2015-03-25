@@ -358,6 +358,11 @@ footer .footer-below {
     line-height: 45px;
 }
 
+.btn-social:hover {
+    border: 2px solid #18bc9c;
+    background-color: #18bc9c;
+}
+
 .btn:focus,
 .btn:active,
 .btn.active {
@@ -447,6 +452,10 @@ footer .footer-below {
 /* User Specified Styles */
  
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus, .navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus {
+    color: #18bc9c;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
     color: #18bc9c;
 }
 
