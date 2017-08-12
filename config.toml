@@ -1,4 +1,23 @@
-baseURL = "http://krishnanchandra.com/"
-languageCode = "en-us"
-title = "Krishnan's Personal Website"
-theme = "cocoa"
+# Example found at https://github.com/nishanths/cocoa-hugo-theme/blob/master/exampleSite/config.toml
+
+baseURL             = "http://krishnan-chandra.github.io/"
+languageCode        = "en-US"
+layoutdir           = "layouts"
+publishdir          = "public"
+theme               = "cocoa"
+author              = "Krishnan Chandra"
+title               = "Krishnan's Personal Website"
+
+[params]
+lang                   = "en"
+latestpostscount       = 5
+
+# About the author
+author                 = "Krishnan Chandra"
+email                  = "me@krishnanchandra.com"
+linkedin               = "//linkedin.com/in/krishnanchandra"
+github                 = "//github.com/krishnan-chandra"
+avatar                 = "img/profile.png"
+
+description            = "Krishnan's Home Page"
+
