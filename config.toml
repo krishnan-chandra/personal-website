@@ -3,7 +3,7 @@
 baseURL             = "http://krishnan-chandra.github.io/"
 languageCode        = "en-US"
 layoutdir           = "layouts"
-publishdir          = "docs"
+publishdir          = "public"
 theme               = "cocoa"
 author              = "Krishnan Chandra"
 title               = "Krishnan's Personal Website"
