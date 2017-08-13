@@ -7,6 +7,7 @@ publishdir          = "public"
 theme               = "cocoa"
 author              = "Krishnan Chandra"
 title               = "Krishnan's Personal Website"
+disableKinds        = ["RSS"]
 
 [params]
 lang                   = "en"
