@@ -1,24 +1,16 @@
 #!/bin/bash
 
-echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
+echo -e "\033[0;32mDeploying updates to Nginx...\033[0m"
 
 # Build the project.
 hugo -t cocoa
 
 # Go To Public folder
 cd public
-# Add changes to git.
-git add .
 
-# Commit changes.
-msg="rebuilding site `date`"
-if [ $# -eq 1 ]
-  then msg="$1"
-fi
-git commit -m "$msg"
+## Copy files to Nginx folder
+cp -R * /var/www/html/
 
-# Push source and build repos.
-git push origin master
+## Restart Nginx
+systemctl reload nginx
 
-# Come Back up to the Project Root
-cd ..
