@@ -23,7 +23,7 @@ url                    = "/about/"
 
 [params]
 lang                   = "en"
-latestpostscount       = 5
+latestpostscount       = 10
 
 # About the author
 author                 = "Krishnan Chandra"
