@@ -30,7 +30,7 @@ author                 = "Krishnan Chandra"
 email                  = "me@krishnanchandra.com"
 linkedin               = "//linkedin.com/in/krishnanchandra"
 github                 = "//github.com/krishnan-chandra"
-avatar                 = "img/profile.png"
+avatar                 = "/img/profile.png"
 
 description            = "Krishnan's Home Page"
 
