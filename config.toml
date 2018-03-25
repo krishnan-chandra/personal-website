@@ -1,6 +1,6 @@
 # Example found at https://github.com/nishanths/cocoa-hugo-theme/blob/master/exampleSite/config.toml
 
-baseURL             = ""
+baseURL             = "/"
 languageCode        = "en-US"
 layoutdir           = "layouts"
 publishdir          = "public"
