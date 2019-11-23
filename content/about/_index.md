@@ -1,7 +1,7 @@
 ---
 title: "About Me"
-date: 2017-08-12T21:02:42-07:00
+date: 2019-11-22T22:28:00-05:00
 ---
 
-Hi! I'm Krishnan and I'm a software engineer based in San Francisco. In my day job I work at Reddit doing backend engineering; outside of work, I am primarily interested in volunteering and soccer.
+Hi! I'm Krishnan and I'm a software engineer based in New York City. In my day job I work at Confluent doing backend engineering; outside of work, I am primarily interested in volunteering and soccer.
 
