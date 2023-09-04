@@ -1,5 +1,5 @@
 title                  = "Krishnan Chandra"
-baseURL                = "https://krishnanchandra.com/"
+baseURL                = "/"
 languageCode           = "en-US"
 theme                  = "hugo-blog-awesome"
 

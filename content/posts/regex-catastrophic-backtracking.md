@@ -5,8 +5,6 @@ author: "Krishnan Chandra"
 draft: false
 ---
 
-# Debugging Catastrophic Backtracking in Python
-
 Recently, I was debugging a Python application that had become stuck while processing certain inputs. The process was taking up 100% CPU time but not making progress. To understand where the application was stuck, I turned to a handy profiling tool called [py-spy](https://github.com/benfred/py-spy).
 
 ## Using py-spy to Find the Bottleneck
@@ -49,7 +47,7 @@ This immediately showed that the search function from Python's `re` regex module
 Now that I knew the culprit was a regex and where it was being called, I looked at the code:
 
 ```python
-pattern = r"<summary>((\n*.*\n*)*)</summary>"
+pattern = r'<summary>((\n*.*\n*)*)</summary>'
 match = re.search(pattern, content.strip(), re.DOTALL)
 ```
 
@@ -63,7 +61,7 @@ As it turns out, the problem is twofold:
 
     > `*?`, `+?`, `??`
     >
-    > The '*', '+', and '?' quantifiers are all greedy; they match as much text as possible. Sometimes this behaviour isn’t desired; if the RE <.*> is matched against '<a> b <c>', it will match the entire string, and not just '<a>'. Adding ? after the quantifier makes it perform the match in non-greedy or minimal fashion; as few characters as possible will be matched. Using the RE <.*?> will match only '<a>'.
+    > The `'*'`, `'+'`, and `'?'` quantifiers are all greedy; they match as much text as possible. Sometimes this behaviour isn’t desired; if the RE `<.*>` is matched against `<a> b <c>`, it will match the entire string, and not just `<a>`. Adding ? after the quantifier makes it perform the match in non-greedy or minimal fashion; as few characters as possible will be matched. Using the RE `<.*?>` will match only `<a>`.
 
     The problem is the `((\n*.*\n*)*)` part - by repeating a newline-sandwiched pattern greedily, it leads to exponential runtime on strings with many newlines, as the engine tries every possible way to match newlines.
 
