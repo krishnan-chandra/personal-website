@@ -49,7 +49,7 @@ This immediately showed that the search function from Python's `re` regex module
 Now that I knew the culprit was a regex and where it was being called, I looked at the code:
 
 ```python
-pattern = r"<summary>((\n*.*\n*)*)</summary>"
+pattern = r'<summary>((\n*.*\n*)*)</summary>'
 match = re.search(pattern, content.strip(), re.DOTALL)
 ```
 
