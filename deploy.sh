@@ -3,7 +3,7 @@
 echo -e "\033[0;32mDeploying updates to Nginx...\033[0m"
 
 # Build the project.
-hugo -t cocoa
+hugo -t hugo-blog-awesome
 
 # Go To Public folder
 cd public
