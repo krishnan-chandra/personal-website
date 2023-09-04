@@ -1,5 +1,5 @@
 title                  = "Krishnan Chandra"
-baseURL                = "/"
+baseURL                = "https://krishnanchandra.com/"
 languageCode           = "en-US"
 theme                  = "hugo-blog-awesome"
 
@@ -22,30 +22,29 @@ enableEmoji            = true
 		ordered = false # generates <ul> instead of <ol>
 
 
-[[menu]]
-    [[menu.main]]
-      # The page reference (pageRef) is useful for menu highlighting
-      # When pageRef is set, setting `url` is optional; it will be used as a fallback if the page is not found.
-      pageRef="/"
-      name = 'Home'
-      url = '/'
-      weight = 10
-    [[menu.main]]
-      pageRef="posts"
-      name                   = "Posts"
-      url                    = "/posts/"
-      weight                 = 20
-    [[menu.main]]
-      pageRef="about"
-      name                   = "About"
-      weight                 = 30
-      url                    = "/about/"
+[menu]
+  [[menu.main]]
+    # The page reference (pageRef) is useful for menu highlighting
+    # When pageRef is set, setting `url` is optional; it will be used as a fallback if the page is not found.
+    pageRef                = "/"
+    name                   = 'Home'
+    weight                 = 10
+  [[menu.main]]
+    pageRef                = "posts"
+    name                   = "Posts"
+    url                    = '/posts/'
+    weight                 = 20
+  [[menu.main]]
+    pageRef                = "about"
+    name                   = "About"
+    url                    = '/about/'
+    weight                 = 30
 
 [params]
   sitename        = "Krishnan's Dev Blog"
   defaultColor    = "auto"
   mainSections    = ['posts']
-  toc             = true # set to false to disable table of contents 'globally'
+  toc             = false # set to false to disable table of contents 'globally'
   goToTop         = true # set to false to disable 'go to top' button
 
   # About the author
@@ -58,7 +57,7 @@ enableEmoji            = true
 
   [[params.socialIcons]]
   name = "github"
-  url = "//github.com/krishnan-chandra"
+  url = "https://github.com/krishnan-chandra"
 
   [[params.socialIcons]]
   name = "twitter"
