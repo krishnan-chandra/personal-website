@@ -1,10 +1,10 @@
-# Example found at https://github.com/nishanths/cocoa-hugo-theme/blob/master/exampleSite/config.toml
-
 baseURL                = "/"
 languageCode           = "en-US"
 layoutdir              = "layouts"
 publishdir             = "public"
 theme                  = "hugo-blog-awesome"
+
+# This defines how dates are formatted
 defaultContentLanguage = "en-us"
 disableKinds           = ["RSS"]
 
@@ -31,13 +31,11 @@ enableEmoji            = true
       name = 'Home'
       url = '/'
       weight = 10
-
     [[menu.main]]
       pageRef                = "posts"
       name                   = "Posts"
       url                    = "/posts/"
       weight                 = 20
-
     [[menu.main]]
       pageRef                = "about"
       name                   = "About"
@@ -69,11 +67,11 @@ enableEmoji            = true
 
   [[params.socialIcons]]
   name = "linkedin"
-  url = "//linkedin.com/in/krishnanchandra"
+  url = "https://linkedin.com/in/krishnanchandra"
 
   [[params.socialIcons]]
   name = "email"
-  url = "me@krishnanchandra.com"
+  url = "mailto:me@krishnanchandra.com"
 
   [[params.socialIcons]]
   name = "Rss"
