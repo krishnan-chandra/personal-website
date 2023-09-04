@@ -1,9 +1,10 @@
 ---
 title: "About Me"
-date: 2021-12-01
+date: 2023-09-03
 ---
 
 Hi! I'm Krishnan Chandra and I'm a software engineer based in New York City.
 
-I'm currently a co-founder at [ResearchRabbit](https://www.researchrabbit.ai/), and previously worked at [Confluent](https://www.confluent.io/) and [Reddit](https://reddit.com/) on backend engineering; outside of work, I am primarily interested in volunteering and soccer.
+I'm currently CTO and Co-Founder at [Human Intelligence](https://humanintelligence.ai/). We are the creators of [ResearchRabbit](https://researchrabbit.ai/) and [Six](https://sixhq.ai).
 
+Previously, I worked at a software engineer (primarily backend eng / distributed systems stuff) at [Confluent](https://confluent.io/) and [Reddit](https://reddit.com/); outside of work, I am primarily interested in volunteering and soccer.
