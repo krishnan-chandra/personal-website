@@ -2,7 +2,7 @@
 title: "Debugging Catastrophic Backtracking for Regular Expressions in Python"
 date: 2023-09-03
 author: "Krishnan Chandra"
-draft: true
+draft: false
 ---
 
 # Debugging Catastrophic Backtracking in Python
