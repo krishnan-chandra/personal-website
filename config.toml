@@ -1,7 +1,6 @@
+title                  = "Krishnan Chandra"
 baseURL                = "/"
 languageCode           = "en-US"
-layoutdir              = "layouts"
-publishdir             = "public"
 theme                  = "hugo-blog-awesome"
 
 # This defines how dates are formatted
@@ -27,17 +26,17 @@ enableEmoji            = true
     [[menu.main]]
       # The page reference (pageRef) is useful for menu highlighting
       # When pageRef is set, setting `url` is optional; it will be used as a fallback if the page is not found.
-      pageRef = "/"
+      pageRef="/"
       name = 'Home'
       url = '/'
       weight = 10
     [[menu.main]]
-      pageRef                = "posts"
+      pageRef="posts"
       name                   = "Posts"
       url                    = "/posts/"
       weight                 = 20
     [[menu.main]]
-      pageRef                = "about"
+      pageRef="about"
       name                   = "About"
       weight                 = 30
       url                    = "/about/"
