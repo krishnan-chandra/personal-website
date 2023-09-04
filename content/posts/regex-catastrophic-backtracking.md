@@ -63,7 +63,7 @@ As it turns out, the problem is twofold:
 
     > `*?`, `+?`, `??`
     >
-    > The '*', '+', and '?' quantifiers are all greedy; they match as much text as possible. Sometimes this behaviour isn’t desired; if the RE <.*> is matched against '<a> b <c>', it will match the entire string, and not just '<a>'. Adding ? after the quantifier makes it perform the match in non-greedy or minimal fashion; as few characters as possible will be matched. Using the RE <.*?> will match only '<a>'.
+    > The `'*'`, `'+'`, and `'?'` quantifiers are all greedy; they match as much text as possible. Sometimes this behaviour isn’t desired; if the RE `<.*>` is matched against `<a> b <c>`, it will match the entire string, and not just `<a>`. Adding ? after the quantifier makes it perform the match in non-greedy or minimal fashion; as few characters as possible will be matched. Using the RE `<.*?>` will match only `<a>`.
 
     The problem is the `((\n*.*\n*)*)` part - by repeating a newline-sandwiched pattern greedily, it leads to exponential runtime on strings with many newlines, as the engine tries every possible way to match newlines.
 
