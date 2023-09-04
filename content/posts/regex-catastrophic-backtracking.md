@@ -5,8 +5,6 @@ author: "Krishnan Chandra"
 draft: false
 ---
 
-# Debugging Catastrophic Backtracking in Python
-
 Recently, I was debugging a Python application that had become stuck while processing certain inputs. The process was taking up 100% CPU time but not making progress. To understand where the application was stuck, I turned to a handy profiling tool called [py-spy](https://github.com/benfred/py-spy).
 
 ## Using py-spy to Find the Bottleneck
