@@ -1,36 +1,94 @@
 # Example found at https://github.com/nishanths/cocoa-hugo-theme/blob/master/exampleSite/config.toml
 
-baseURL             = "/"
-languageCode        = "en-US"
-layoutdir           = "layouts"
-publishdir          = "public"
-theme               = "cocoa"
-author              = "Krishnan Chandra"
-title               = "Krishnan's Personal Website"
-disableKinds        = ["RSS"]
+baseURL                = "/"
+languageCode           = "en-US"
+layoutdir              = "layouts"
+publishdir             = "public"
+theme                  = "hugo-blog-awesome"
+defaultContentLanguage = "en-us"
+disableKinds           = ["RSS"]
 
-[[menu.main]]
-name                   = "Blog"
-weight                 = -120
-identifier             = "blog"
-url                    = "/blog/"
+# Enable emojis globally
+enableEmoji            = true
 
-[[menu.main]]
-name                   = "About"
-weight                 = -110
-identifier             = "about"
-url                    = "/about/"
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+  [markup.goldmark.renderer]
+    unsafe = true
+	[markup.tableOfContents]
+		startLevel = 2 # ToC starts from H2
+		endLevel = 4 # ToC ends at H4
+		ordered = false # generates <ul> instead of <ol>
+
+
+[[menu]]
+    [[menu.main]]
+      # The page reference (pageRef) is useful for menu highlighting
+      # When pageRef is set, setting `url` is optional; it will be used as a fallback if the page is not found.
+      pageRef = "/"
+      name = 'Home'
+      url = '/'
+      weight = 10
+
+    [[menu.main]]
+      pageRef                = "posts"
+      name                   = "Posts"
+      url                    = "/posts/"
+      weight                 = 20
+
+    [[menu.main]]
+      pageRef                = "about"
+      name                   = "About"
+      weight                 = 30
+      url                    = "/about/"
 
 [params]
-lang                   = "en"
-latestpostscount       = 10
+  sitename        = "Krishnan's Dev Blog"
+  defaultColor    = "auto"
+  mainSections    = ['posts']
+  toc             = true # set to false to disable table of contents 'globally'
+  goToTop         = true # set to false to disable 'go to top' button
 
-# About the author
-author                 = "Krishnan Chandra"
-email                  = "me@krishnanchandra.com"
-linkedin               = "//linkedin.com/in/krishnanchandra"
-github                 = "//github.com/krishnan-chandra"
-avatar                 = "/img/profile.png"
+  # About the author
+  [params.author]
+    avatar = "img/profile.png" # put the file in assets folder; also ensure that image has same height and width
+    # Note: image is not rendered if the resource(avatar image) is not found. No error is displayed.
+    intro = "Krishnan's Dev Blog"
+    name = "Krishnan Chandra"
+    description = "A blog about my random adventures in software development."
 
-description            = "Krishnan's Home Page"
+  [[params.socialIcons]]
+  name = "github"
+  url = "//github.com/krishnan-chandra"
 
+  [[params.socialIcons]]
+  name = "twitter"
+  url = "https://twitter.com/krishnanc_"
+
+  [[params.socialIcons]]
+  name = "linkedin"
+  url = "//linkedin.com/in/krishnanchandra"
+
+  [[params.socialIcons]]
+  name = "email"
+  url = "me@krishnanchandra.com"
+
+  [[params.socialIcons]]
+  name = "Rss"
+  url = "index.xml"
+
+[privacy]
+  [privacy.disqus]
+    disable = true
+  [privacy.googleAnalytics]
+    disable = true
+  [privacy.instagram]
+    disable = true
+  [privacy.twitter]
+    disable = true
+  [privacy.vimeo]
+    disable = true
+  [privacy.youtube]
+    disable = true

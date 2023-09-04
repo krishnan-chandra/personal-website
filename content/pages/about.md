@@ -1,5 +1,7 @@
 ---
-title: "About Me"
+title: About
+description: 'About the Author'
+author: Krishnan Chandra
 date: 2023-09-03
 ---
 
