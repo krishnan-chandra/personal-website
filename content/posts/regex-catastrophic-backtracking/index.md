@@ -55,36 +55,32 @@ Now that I knew the culprit was a regex and where it was being called, I looked 
 
 ```python
 pattern = r'<summary>((\n*.*\n*)*)</summary>'
-regex_match = re.search(pattern, content.strip(), re.DOTALL)
+regex_match = re.search(pattern, content.strip())
 ```
 
 This regex parses output that is returned from a large language model, and tries to match text within `<summary>` tags as output by the LLM. It also explicitly matches newlines before and after each block of text. It defines capture groups for the whole content of the summary tags, as well as each newline-delimited match group.
 
 So what's the problem here?
 
-As it turns out, the problem is twofold:
+By default, the match characters for `*` (zero or more), `+` (one or more), and `?` (zero or one) are matched greedily. If we look at the [Python documentation](https://docs.python.org/3/library/re.html#regular-expression-syntax), we see:
 
-1. By default, the match characters for `*` (zero or more), `+` (one or more), and `?` (zero or one) are matched greedily. If we look at the [Python documentation](https://docs.python.org/3/library/re.html#regular-expression-syntax), we see:
+> `*?`, `+?`, `??`
+>
+> The `'*'`, `'+'`, and `'?'` quantifiers are all greedy; they match as much text as possible. Sometimes this behaviour isn’t desired; if the RE `<.*>` is matched against `<a> b <c>`, it will match the entire string, and not just `<a>`. Adding ? after the quantifier makes it perform the match in non-greedy or minimal fashion; as few characters as possible will be matched. Using the RE `<.*?>` will match only `<a>`.
 
-    > `*?`, `+?`, `??`
-    >
-    > The `'*'`, `'+'`, and `'?'` quantifiers are all greedy; they match as much text as possible. Sometimes this behaviour isn’t desired; if the RE `<.*>` is matched against `<a> b <c>`, it will match the entire string, and not just `<a>`. Adding ? after the quantifier makes it perform the match in non-greedy or minimal fashion; as few characters as possible will be matched. Using the RE `<.*?>` will match only `<a>`.
+The problem is the expression `((\n*.*\n*)*)` - by repeating a newline-sandwiched pattern greedily, it leads to exponential runtime on strings with many newlines, as the engine tries every possible way to match newlines.
 
-    The problem is the expression `((\n*.*\n*)*)` - by repeating a newline-sandwiched pattern greedily, it leads to exponential runtime on strings with many newlines, as the engine tries every possible way to match newlines.
-
-    This is known as *catastrophic backtracking*. The regex engine matches as far as it can initially with a greedy subpattern, then backtracks trying every possible matching combination before failing.
-
-2. We were passing the [`re.DOTALL`](https://docs.python.org/3/library/re.html#re.DOTALL) flag when evaluating the regex. This flag makes the `.` character in regex match newlines. This further exacerbated the problem by including newlines surrounded by newlines as part of the match criteria!
+This is known as *catastrophic backtracking*. The regex engine matches as far as it can initially with a greedy subpattern, then backtracks trying every possible matching combination before failing.
 
 ## Fixing with a Non-Greedy Pattern
 
 What we really want here is just to match all the text inside `<summary>` tags in a **non-greedy** fashion - if there are multiple `<summary>` tags, their contents should match separately.
 
-To avoid catastrophic backtracking, the key is to make the repeating subpattern non-greedy, by adding the character `?` to the end as shown above in the documentation. Additionally, since we want to match newlines inside the tags, we retain the `re.DOTALL` flag.
+To avoid catastrophic backtracking, the key is to make the repeating subpattern non-greedy, by adding the character `?` to the end as shown above in the documentation. Additionally, since we want to match newlines inside the tags, we add the `re.DOTALL` flag.
 
 ```python
 pattern_str = r"<summary>(.*?)</summary>"
-regex_match = re.search(pattern, content.strip())
+regex_match = re.search(pattern_str, content.strip(), flags=re.DOTALL)
 ```
 
 Now, we get the smallest possible sequence of characters that are in between `<summary>` tags. This avoids getting stuck trying to match newlines exhaustively, and is also much easier to read!
@@ -94,60 +90,60 @@ Making the repeat non-greedy prevents the combinatorial explosion and makes the 
 
 ## Differences in performance
 
-Here is an small script I ran to compare the performance of both regexes. This script was run on my laptop (Macbook Pro M1 Max, 32GB RAM) using Python 3.11.3.
+Here is an small script I ran to compare the performance of both regexes. The idea behind this script is to use a pattern with a few newlines (`a\nb\nc`) and multiply this by some factor to induce a string with more
 
 Additionally, we use the [re.compile](https://docs.python.org/3/library/re.html#re.compile) method to create a regular expression object that can be reused many times in the same program more efficiently. This call also lets us pass in the `re.DOTALL` flag once when the regex is created rather than on every invocation.
 
-Note that both regexes are compiled before they are used to ensure consistency:
+Note that **both** regexes are compiled before they are used to ensure consistency.
 
-  ```python
-  import re
-  import sys
-  import time
-
-
-  def measure_regex_time_ns(multiplier: int):
-      # Create input strings based on the multiplier
-      input_str = 'a\nb\nc' * multiplier
-
-      # Problematic regex pattern with potential for catastrophic backtracking
-      problematic_pattern = re.compile(r'((\n*.*\n*)*)')
-
-      # Simplified pattern that doesn't cause backtracking, with re.DOTALL flag and non-greedy matching
-      simple_pattern_non_greedy = re.compile(r'(.*?)', re.DOTALL)
-
-      # Measure time taken for matching with problematic pattern using re.search
-      start_time = time.perf_counter_ns()
-      regex_match = problematic_pattern.search(input_str)
-      end_time = time.perf_counter_ns()
-      problematic_time = end_time - start_time
-
-      # Measure time taken for matching with simplified pattern using re.search
-      start_time = time.perf_counter_ns()
-      regex_match = simple_pattern_non_greedy.search(input_str)
-      end_time = time.perf_counter_ns()
-      simple_time_non_greedy = end_time - start_time
-
-      return problematic_time, simple_time_non_greedy
+    ```python
+    import re
+    import sys
+    import time
 
 
-  def main():
-      # Test the function with multiples for string length (1, 10, 100, 1000, 10000, 100000)
-      multipliers = [int(10 ** i) for i in range(6)]
-      for multiplier in multipliers:
-          problematic_time, simple_time = measure_regex_time_ns(multiplier)
-          print("Multiplier:", multiplier)
-          print("Problematic Regex Time:", problematic_time)
-          print("Simple Regex Time:", simple_time)
-          print("Ratio of Times:", problematic_time / simple_time)
-          print("-" * 30 + "\n" * 3)
+    def measure_regex_time_ns(multiplier: int):
+        # Create input strings based on the multiplier
+        input_str = 'a\nb\nc' * multiplier
+
+        # Problematic regex pattern with potential for catastrophic backtracking
+        problematic_pattern = re.compile(r'((\n*.*\n*)*)')
+
+        # Simplified pattern that doesn't cause backtracking, with re.DOTALL flag and non-greedy matching
+        simple_pattern_non_greedy = re.compile(r'(.*?)', re.DOTALL)
+
+        # Measure time taken for matching with problematic pattern using re.search
+        start_time = time.perf_counter_ns()
+        regex_match = problematic_pattern.search(input_str)
+        end_time = time.perf_counter_ns()
+        problematic_time = end_time - start_time
+
+        # Measure time taken for matching with simplified pattern using re.search
+        start_time = time.perf_counter_ns()
+        regex_match = simple_pattern_non_greedy.search(input_str)
+        end_time = time.perf_counter_ns()
+        simple_time_non_greedy = end_time - start_time
+
+        return problematic_time, simple_time_non_greedy
 
 
-  if __name__ == "__main__":
-      main()
-  ```
+    def main():
+        # Test the function with multiples for string length (1, 10, 100, 1000, 10000, 100000)
+        multipliers = [int(10 ** i) for i in range(6)]
+        for multiplier in multipliers:
+            problematic_time, simple_time = measure_regex_time_ns(multiplier)
+            print("Multiplier:", multiplier)
+            print("Problematic Regex Time:", problematic_time)
+            print("Simple Regex Time:", simple_time)
+            print("Ratio of Times:", problematic_time / simple_time)
+            print("-" * 30 + "\n" * 3)
 
-  Here were the results of running the script using Python 3.11.3 with various input values:
+
+    if __name__ == "__main__":
+        main()
+    ```
+
+  Here were the results with various input values for `multiplier` from running on my laptop (Macbook Pro M1 Max, 32GB RAM) using Python 3.11.3.
 
   ```bash
   Multiplier: 1
@@ -242,4 +238,6 @@ Also thanks to Ben Frederickson, who created the `py-spy` library and also wrote
 ## Resources
 
 * [An article on catastrophic backtracking by Ben Frederickson, author of py-spy](https://www.benfrederickson.com/python-catastrophic-regular-expressions-and-the-gil/)
+* [Mozilla blog post on catstrophic backtracking from 2010](https://blog.mozilla.org/webdev/2010/11/15/avoiding-catastrophic-backtracking-in-apache-rewriterule-patterns/)
 * [An interesting paper on detecting catastrophic backtracking statically in Java](https://arxiv.org/abs/1405.5599)
+* [Coding Horror blog on regex performance from 2006](https://blog.codinghorror.com/regex-performance/)
