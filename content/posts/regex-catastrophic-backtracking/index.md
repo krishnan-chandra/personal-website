@@ -48,7 +48,7 @@ Here is what the columns mean:
 * `TotalTime`: Total amount of CPU time that was spent in the function and all its children.
 * `Function (filename)`: This is the name of the function and the file where it is defined.
 
-This immediately showed that the [`re.search`](https://docs.python.org/3/library/re.html#re.search) function from Python's regex module was taking up 100% of the process time, and the execution time was spent in this function directly rather than in any children that it calls.
+From the output above, we can see that the [`re.search`](https://docs.python.org/3/library/re.html#re.search) function from Python's regex module takes up 100% of the process time, and the execution time is spent in this function directly rather than in any children that it calls.
 
 # Catastrophic Backtracking in Regular Expressions
 
@@ -59,7 +59,7 @@ pattern = r'<summary>((\n*.*\n*)*)</summary>'
 match = re.search(pattern, content.strip(), re.DOTALL)
 ```
 
-This regex parses output from an LLM, and tries to match text within `<summary>` tags as output by the LLM. It also explicitly matches newlines before and after each block of text. It defines capture groups for the whole content of the summary tags, as well as each newline-delimited match group.
+This regex parses output that is returned from a large language model, and tries to match text within `<summary>` tags as output by the LLM. It also explicitly matches newlines before and after each block of text. It defines capture groups for the whole content of the summary tags, as well as each newline-delimited match group.
 
 So what's the problem here?
 
@@ -84,8 +84,7 @@ What we really want here is just to match all the text inside `<summary>` tags i
 To avoid catastrophic backtracking, the key is to make the repeating subpattern non-greedy, by adding the character `?` to the end as shown above in the documentation. Additionally, since we want to match newlines inside the tags, we retain the `re.DOTALL` flag.
 
 ```python
-pattern_str = r"<summary>(.*)</summary>"
-pattern = re.compile(pattern_str, re.DOTALL)
+pattern_str = r"<summary>(.*?)</summary>"
 match = re.search(pattern, content.strip())
 ```
 
@@ -93,11 +92,14 @@ Now, we get the smallest possible sequence of characters that are in between `<s
 
 Making the repeat non-greedy prevents the combinatorial explosion and makes the runtime linear rather than exponential in the worst case.
 
-Additionally, we use the [re.compile](https://docs.python.org/3/library/re.html#re.compile) method to create an object that can be reused many times in the same program more efficiently. This call also lets us pass in the `re.DOTALL` flag once when the regex is created rather than on every invocation.
 
 ## Differences in performance
 
-Here is an small script I ran to compare the performance of both regexes. Note that both regexes are compiled before they are used to ensure consistency:
+Here is an small script I ran to compare the performance of both regexes. This script was run on my laptop (Macbook Pro M1 Max, 32GB RAM) using Python 3.11.3.
+
+Additionally, we use the [re.compile](https://docs.python.org/3/library/re.html#re.compile) method to create a regular expression object that can be reused many times in the same program more efficiently. This call also lets us pass in the `re.DOTALL` flag once when the regex is created rather than on every invocation.
+
+Note that both regexes are compiled before they are used to ensure consistency:
 
   ```python
   import re
@@ -198,9 +200,9 @@ Here is an small script I ran to compare the performance of both regexes. Note t
 
 As you can see, the problematic regex demonstrates increasingly poor performance on long input sequences, and scales incredibly poorly compared to the simple regex.
 
-Here is a log-log plot of multiplier vs execution time which illustrates the same:
+Here is a log-log plot of multiplier vs execution time which illustrates this relationship:
 
-![Regex performance graph](../../assets/img/catastrophic_backtracking_performance_graph.png)
+![Regex performance graph](img/catastrophic_backtracking_performance_graph.png)
 
 and the code to generate this plot:
 
@@ -208,7 +210,7 @@ and the code to generate this plot:
 import matplotlib.pyplot as plt
 import numpy as np
 
-# Data provided for plotting
+# Data to plot
 multipliers = np.array([1, 10, 100, 1000, 10000, 100000])
 problematic_times = np.array([2708, 3292, 19042, 160291, 1809958, 20424917])
 simple_times = np.array([500, 292, 250, 250, 708, 2792])
@@ -224,6 +226,12 @@ plt.legend()
 plt.grid(True, which="both", ls="--")
 plt.show()
 ```
+
+# Conclusions
+
+* Multiple levels of greedy matching can cause regex performance to spin out of control. Avoid using multiple levels of greedy matching if at all possible.
+* Use non-greedy matching and flags to get better results.
+* Use `re.compile` to compile regexes that are used many times in the same application and improve performance.
 
 
 # Acknowledgements
