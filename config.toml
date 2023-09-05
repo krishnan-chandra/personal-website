@@ -13,7 +13,7 @@ enableEmoji            = true
 
 [markup]
   [markup.highlight]
-    style = "vulcan"
+    style = "monokai"
   [markup.goldmark.renderer]
     unsafe = true
 	[markup.tableOfContents]
