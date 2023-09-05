@@ -12,6 +12,8 @@ enableEmoji            = true
 
 
 [markup]
+  [markup.highlight]
+    style = "vulcan"
   [markup.goldmark.renderer]
     unsafe = true
 	[markup.tableOfContents]

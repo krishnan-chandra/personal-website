@@ -13,13 +13,13 @@ py-spy is a sampling profiler for Python that lets you see where your code is sp
 
 You can use py-spy on a specific process ID by running
 
-```shell
+```bash
 py-spy dump --pid <pid>
 ```
 
 The result came back and looked like this:
 
-```shell
+```bash
   %Own   %Total  OwnTime  TotalTime  Function (filename)
 100.00% 100.00%   18.00s    18.00s   search (re.py)
   0.00% 100.00%   0.000s    18.00s   process_item (pipelines/summarization.py)
@@ -35,7 +35,6 @@ The result came back and looked like this:
   0.00% 100.00%   0.000s    18.00s   run (twisted/internet/asyncioreactor.py)
   0.00% 100.00%   0.000s    18.00s   start (scrapy/crawler.py)
   0.00% 100.00%   0.000s    18.00s   _run_print_help (scrapy/cmdline.py)
-  0.00
 ```
 
 This application is a [Scrapy](https://scrapy.org/) spider, which explains why Scrapy and Twisted show up in the stack trace.
@@ -150,7 +149,7 @@ Note that both regexes are compiled before they are used to ensure consistency:
 
   Here were the results of running the script using Python 3.11.3 with various input values:
 
-  ```shell
+  ```bash
   Multiplier: 1
   Problematic Regex Time: 2708
   Simple Regex Time: 500
