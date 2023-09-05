@@ -51,7 +51,7 @@ pattern = r'<summary>((\n*.*\n*)*)</summary>'
 match = re.search(pattern, content.strip(), re.DOTALL)
 ```
 
-This regex tries to match text within `<summary>` tags, while also explicitly matching newlines before and after each block of text. It defines capture groups for the whole content of the summary tags, as well as each newline-delimited
+This regex tries to match text within `<summary>` tags, while also explicitly matching newlines before and after each block of text. It defines capture groups for the whole content of the summary tags, as well as each newline-delimited match group.
 
 So what's the problem here?
 
@@ -71,9 +71,9 @@ As it turns out, the problem is twofold:
 
 ## Fixing with a Non-Greedy Pattern
 
-What we really want here is just to match all the text inside `<summary>` tags in a non-greedy fashion - if there are multiple tags, their contents should match separately.
+What we really want here is just to match all the text inside `<summary>` tags in a **non-greedy** fashion - if there are multiple tags, their contents should match separately.
 
-To avoid catastrophic backtracking, the key is to make the repeating subpattern **non-greedy**, by adding the character `?` to the end as shown above in the documentation. Additionally, since we want to match newlines we retain the `re.DOTALL` flag.
+To avoid catastrophic backtracking, the key is to make the repeating subpattern non-greedy, by adding the character `?` to the end as shown above in the documentation. Additionally, since we want to match newlines we retain the `re.DOTALL` flag.
 
 ```python
 pattern_str = r"<summary>(.*?)</summary>"
@@ -81,7 +81,7 @@ pattern = re.compile(pattern_str, re.DOTALL)
 match = re.search(pattern, content.strip())
 ```
 
-Now, we get the smallest possible set of characters that are in between `<summary>` tags. This avoids getting stuck trying to match newlines exhaustively, and is also much easier to read!
+Now, we get the smallest possible sequence of characters that are in between `<summary>` tags. This avoids getting stuck trying to match newlines exhaustively, and is also much easier to read!
 
 Making the repeat non-greedy prevents the combinatorial explosion and makes the runtime linear rather than exponential in the worst case.
 
