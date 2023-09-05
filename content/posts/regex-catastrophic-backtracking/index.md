@@ -5,11 +5,11 @@ author: "Krishnan Chandra"
 draft: false
 ---
 
-Recently, I was debugging a Python application that had become stuck while processing certain inputs. The process was taking up 100% CPU time but not making progress. To understand where the application was stuck, I turned to a handy profiling tool called [py-spy](https://github.com/benfred/py-spy).
+Recently, I was debugging a Python application that had become stuck while processing certain inputs. The process was taking up 100% CPU time but not making progress. To try and figure out where the application was getting stuck, I turned to a handy profiling tool called [py-spy](https://github.com/benfred/py-spy).
 
-## Using py-spy to Find the Bottleneck
+# Using py-spy to Find the Bottleneck
 
-py-spy is a sampling profiler for Python that lets you see where your code is spending time without modifying it. I used the `py-spy dump` command to attach to the stuck Python process and print out a snapshot of the current call stack across all threads.
+py-spy is a sampling profiler for Python that lets you see where your code is spending time without modifying it. It can be used to get information from running Python processes, which is very helpful! I used the `py-spy dump` command to attach to the stuck Python process and print out a snapshot of the current call stack across all threads.
 
 You can use py-spy on a specific process ID by running
 
@@ -17,7 +17,7 @@ You can use py-spy on a specific process ID by running
 py-spy dump --pid <pid>
 ```
 
-The result came back and looked like this:
+In my case, the result looked like this:
 
 ```bash
   %Own   %Total  OwnTime  TotalTime  Function (filename)
