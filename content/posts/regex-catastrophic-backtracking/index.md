@@ -1,6 +1,6 @@
 ---
 title: "Debugging Catastrophic Backtracking for Regular Expressions in Python"
-date: 2023-09-03
+date: 2023-09-05
 author: "Krishnan Chandra"
 draft: false
 ---
