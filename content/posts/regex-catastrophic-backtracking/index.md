@@ -54,8 +54,8 @@ From the output above, we can see that the [`re.search`](https://docs.python.org
 Now that I knew the culprit was a regex and where it was being called, I looked at the code:
 
 ```python
-pattern = r'<summary>((\n*.*\n*)*)</summary>'
-regex_match = re.search(pattern, content.strip())
+pattern_str = r'<summary>((\n*.*\n*)*)</summary>'
+regex_match = re.search(pattern_str, content.strip())
 ```
 
 This regex parses output that is returned from a large language model, and tries to match text within `<summary>` tags as output by the LLM. It also explicitly matches newlines before and after each block of text. It defines capture groups for the whole content of the summary tags, as well as each newline-delimited match group.
@@ -92,9 +92,11 @@ Making the pattern non-greedy prevents the combinatorial explosion and makes the
 
 ### Test script
 
-Here is an small script I ran to compare the performance of both regexes. The idea behind this script is to use a pattern with a few newlines (`a\nb\nc`) and multiply this by some factor to induce a string with more newlines that can get caught by the repeating greedy match in the original regex. Addiitonally, we remove the `<summary>` tags surrounding the input as it is not needed to demonstrate the behavior.
+Here is an small script I ran to compare the performance of both regexes. The idea behind this script is to use a pattern with a few newlines (`a\nb\nc`) and multiply this by some factor to induce a string with more newlines that can get caught by the repeating greedy match in the original regex. Additionally, we remove the `<summary>` tags surrounding the input as it is not needed to demonstrate the behavior.
 
 Additionally, we use the [re.compile](https://docs.python.org/3/library/re.html#re.compile) method to create a regular expression object that can be reused many times in the same program more efficiently. This call also lets us pass in the `re.DOTALL` flag once when the regex is created rather than on every invocation.
+
+We use the `time.perf_counter_ns()` to measure the run time of each regex search in nanoseconds and get as accurate a value for the execution time as possible.
 
 Note that **both** regexes are compiled before they are used to ensure consistency.
 
