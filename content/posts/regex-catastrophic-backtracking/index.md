@@ -76,7 +76,7 @@ This is known as *catastrophic backtracking*. The regex engine matches as far as
 
 What we really want here is just to match all the text inside `<summary>` tags in a **non-greedy** fashion - if there are multiple `<summary>` tags, their contents should match separately.
 
-To avoid catastrophic backtracking, the key is to make the repeating subpattern non-greedy, by adding the character `?` to the end as shown above in the documentation. Additionally, since we want to match newlines inside the tags, we add the `re.DOTALL` flag.
+To avoid catastrophic backtracking, the key is to make the repeating subpattern non-greedy, by adding the character `?` to the end as shown above in the documentation. Additionally, since we want to match newlines inside the tags, we add the `re.DOTALL` flag to ensure that the `.` character matches newlines as well.
 
 ```python
 pattern_str = r"<summary>(.*?)</summary>"
@@ -85,12 +85,14 @@ regex_match = re.search(pattern_str, content.strip(), flags=re.DOTALL)
 
 Now, we get the smallest possible sequence of characters that are in between `<summary>` tags. This avoids getting stuck trying to match newlines exhaustively, and is also much easier to read!
 
-Making the repeat non-greedy prevents the combinatorial explosion and makes the runtime linear rather than exponential in the worst case.
+Making the pattern non-greedy prevents the combinatorial explosion and makes the runtime linear rather than exponential in the worst case.
 
 
 ## Differences in performance
 
-Here is an small script I ran to compare the performance of both regexes. The idea behind this script is to use a pattern with a few newlines (`a\nb\nc`) and multiply this by some factor to induce a string with more
+### Test script
+
+Here is an small script I ran to compare the performance of both regexes. The idea behind this script is to use a pattern with a few newlines (`a\nb\nc`) and multiply this by some factor to induce a string with more newlines that can get caught by the repeating greedy match in the original regex. Addiitonally, we remove the `<summary>` tags surrounding the input as it is not needed to demonstrate the behavior.
 
 Additionally, we use the [re.compile](https://docs.python.org/3/library/re.html#re.compile) method to create a regular expression object that can be reused many times in the same program more efficiently. This call also lets us pass in the `re.DOTALL` flag once when the regex is created rather than on every invocation.
 
@@ -98,7 +100,6 @@ Note that **both** regexes are compiled before they are used to ensure consisten
 
     ```python
     import re
-    import sys
     import time
 
 
@@ -133,8 +134,8 @@ Note that **both** regexes are compiled before they are used to ensure consisten
         for multiplier in multipliers:
             problematic_time, simple_time = measure_regex_time_ns(multiplier)
             print("Multiplier:", multiplier)
-            print("Problematic Regex Time:", problematic_time)
-            print("Simple Regex Time:", simple_time)
+            print("Problematic Regex Time (ns):", problematic_time)
+            print("Simple Regex Time (ns):", simple_time)
             print("Ratio of Times:", problematic_time / simple_time)
             print("-" * 30 + "\n" * 3)
 
@@ -142,6 +143,9 @@ Note that **both** regexes are compiled before they are used to ensure consisten
     if __name__ == "__main__":
         main()
     ```
+
+### Results
+
 
   Here were the results with various input values for `multiplier` from running on my laptop (Macbook Pro M1 Max, 32GB RAM) using Python 3.11.3.
 
@@ -195,11 +199,16 @@ Note that **both** regexes are compiled before they are used to ensure consisten
 
 As you can see, the problematic regex demonstrates increasingly poor performance on long input sequences, and scales incredibly poorly compared to the simple regex.
 
-Here is a log-log plot of multiplier vs execution time which illustrates this relationship:
+Below is a log-log plot of multiplier vs execution time which illustrates this relationship. Both the X and Y axes are scaled logarithmically to make the exponential relationship between the variables clearer.
 
 ![Regex performance graph](img/catastrophic_backtracking_performance_graph.png)
 
-and the code to generate this plot:
+As you can see, the execution time scales exponentially for the problematic regex as the input size scales. By contrast, the simple regex's execution time grows much more slowly and only increases by 1 order of magnitude even as the input size grows by 5 orders of magnitude!
+
+
+### Plotting code
+
+Here is the code used to generate this plot:
 
 ```python
 import matplotlib.pyplot as plt
@@ -207,8 +216,8 @@ import numpy as np
 
 # Data to plot
 multipliers = np.array([1, 10, 100, 1000, 10000, 100000])
-problematic_times = np.array([2708, 3292, 19042, 160291, 1809958, 20424917])
-simple_times = np.array([500, 292, 250, 250, 708, 2792])
+problematic_times = np.array([2000, 2583, 19250, 164875, 1860708, 25549500])
+simple_times = np.array([458, 250, 250, 208, 11625, 19000])
 
 # Plotting the data
 plt.figure(figsize=(10, 6))
