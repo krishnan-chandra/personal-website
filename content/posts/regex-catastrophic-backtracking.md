@@ -40,7 +40,7 @@ The result came back and looked like this:
 
 This application is a [Scrapy](https://scrapy.org/) spider, which explains why Scrapy and Twisted show up in the stack trace.
 
-Here is what the various items mean:
+Here is what the columns mean:
 
 * `%Own`: % of time currently spent in the function.
 * `%Total`: % of time currently spent in the function and all the functions it called (children).
@@ -48,7 +48,7 @@ Here is what the various items mean:
 * `TotalTime`: Total amount of CPU time that was spent in the function and all its children.
 * `Function (filename)`: This is the name of the function and the file where it is defined.
 
-This immediately showed that the [`re.search`](https://docs.python.org/3/library/re.html#re.search) function from Python's regex module was taking up 100% of the process time, and the execution time was spent in this function directly rather than in any functions that it calls.
+This immediately showed that the [`re.search`](https://docs.python.org/3/library/re.html#re.search) function from Python's regex module was taking up 100% of the process time, and the execution time was spent in this function directly rather than in any children that it calls.
 
 # Catastrophic Backtracking in Regular Expressions
 
@@ -59,7 +59,7 @@ pattern = r'<summary>((\n*.*\n*)*)</summary>'
 match = re.search(pattern, content.strip(), re.DOTALL)
 ```
 
-This regex tries to match text within `<summary>` tags, while also explicitly matching newlines before and after each block of text. It defines capture groups for the whole content of the summary tags, as well as each newline-delimited match group.
+This regex parses output from an LLM, and tries to match text within `<summary>` tags as output by the LLM. It also explicitly matches newlines before and after each block of text. It defines capture groups for the whole content of the summary tags, as well as each newline-delimited match group.
 
 So what's the problem here?
 
@@ -79,12 +79,12 @@ As it turns out, the problem is twofold:
 
 ## Fixing with a Non-Greedy Pattern
 
-What we really want here is just to match all the text inside `<summary>` tags in a **non-greedy** fashion - if there are multiple tags, their contents should match separately.
+What we really want here is just to match all the text inside `<summary>` tags in a **non-greedy** fashion - if there are multiple `<summary>` tags, their contents should match separately.
 
-To avoid catastrophic backtracking, the key is to make the repeating subpattern non-greedy, by adding the character `?` to the end as shown above in the documentation. Additionally, since we want to match newlines we retain the `re.DOTALL` flag.
+To avoid catastrophic backtracking, the key is to make the repeating subpattern non-greedy, by adding the character `?` to the end as shown above in the documentation. Additionally, since we want to match newlines inside the tags, we retain the `re.DOTALL` flag.
 
 ```python
-pattern_str = r"<summary>(.*?)</summary>"
+pattern_str = r"<summary>(.*)</summary>"
 pattern = re.compile(pattern_str, re.DOTALL)
 match = re.search(pattern, content.strip())
 ```
@@ -95,8 +95,144 @@ Making the repeat non-greedy prevents the combinatorial explosion and makes the 
 
 Additionally, we use the [re.compile](https://docs.python.org/3/library/re.html#re.compile) method to create an object that can be reused many times in the same program more efficiently. This call also lets us pass in the `re.DOTALL` flag once when the regex is created rather than on every invocation.
 
+## Differences in performance
 
-# Resources
+Here is an small script I ran to compare the performance of both regexes. Note that both regexes are compiled before they are used to ensure consistency:
 
-* [An article on this same topic by Ben Frederickson, author of py-spy](https://www.benfrederickson.com/python-catastrophic-regular-expressions-and-the-gil/)
+  ```python
+  import re
+  import sys
+  import time
+
+
+  def measure_regex_time_ns(multiplier: int):
+      # Create input strings based on the multiplier
+      input_str = 'a\nb\nc' * multiplier
+
+      # Problematic regex pattern with potential for catastrophic backtracking
+      problematic_pattern = re.compile(r'((\n*.*\n*)*)')
+
+      # Simplified pattern that doesn't cause backtracking, with re.DOTALL flag and non-greedy matching
+      simple_pattern_non_greedy = re.compile(r'(.*?)', re.DOTALL)
+
+      # Measure time taken for matching with problematic pattern using re.search
+      start_time = time.perf_counter_ns()
+      regex_match = problematic_pattern.search(input_str)
+      end_time = time.perf_counter_ns()
+      problematic_time = end_time - start_time
+
+      # Measure time taken for matching with simplified pattern using re.search
+      start_time = time.perf_counter_ns()
+      regex_match = simple_pattern_non_greedy.search(input_str)
+      end_time = time.perf_counter_ns()
+      simple_time_non_greedy = end_time - start_time
+
+      return problematic_time, simple_time_non_greedy
+
+
+  def main():
+      # Test the function with multiples for string length (1, 10, 100, 1000, 10000, 100000)
+      multipliers = [int(10 ** i) for i in range(6)]
+      for multiplier in multipliers:
+          problematic_time, simple_time = measure_regex_time_ns(multiplier)
+          print("Multiplier:", multiplier)
+          print("Problematic Regex Time:", problematic_time)
+          print("Simple Regex Time:", simple_time)
+          print("Ratio of Times:", problematic_time / simple_time)
+          print("-" * 30 + "\n" * 3)
+
+
+  if __name__ == "__main__":
+      main()
+  ```
+
+  Here were the results of running the script using Python 3.11.3 with various input values:
+
+  ```shell
+  Multiplier: 1
+  Problematic Regex Time: 2708
+  Simple Regex Time: 500
+  Ratio of Times: 5.416
+  ------------------------------
+
+
+
+  Multiplier: 10
+  Problematic Regex Time: 3292
+  Simple Regex Time: 292
+  Ratio of Times: 11.273972602739725
+  ------------------------------
+
+
+
+  Multiplier: 100
+  Problematic Regex Time: 19042
+  Simple Regex Time: 250
+  Ratio of Times: 76.168
+  ------------------------------
+
+
+
+  Multiplier: 1000
+  Problematic Regex Time: 160291
+  Simple Regex Time: 250
+  Ratio of Times: 641.164
+  ------------------------------
+
+
+
+  Multiplier: 10000
+  Problematic Regex Time: 1809958
+  Simple Regex Time: 708
+  Ratio of Times: 2556.437853107345
+  ------------------------------
+
+
+
+  Multiplier: 100000
+  Problematic Regex Time: 20424917
+  Simple Regex Time: 2792
+  Ratio of Times: 7315.514684813754
+  ------------------------------
+  ```
+
+As you can see, the problematic regex demonstrates increasingly poor performance on long input sequences, and scales incredibly poorly compared to the simple regex.
+
+Here is a log-log plot of multiplier vs execution time which illustrates the same:
+
+![Regex performance graph](../../assets/img/catastrophic_backtracking_performance_graph.png)
+
+and the code to generate this plot:
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data provided for plotting
+multipliers = np.array([1, 10, 100, 1000, 10000, 100000])
+problematic_times = np.array([2708, 3292, 19042, 160291, 1809958, 20424917])
+simple_times = np.array([500, 292, 250, 250, 708, 2792])
+
+# Plotting the data
+plt.figure(figsize=(10, 6))
+plt.loglog(multipliers, problematic_times, label='Problematic Regex Time (ns)', marker='o')
+plt.loglog(multipliers, simple_times, label='Simple Regex Time (ns)', marker='x')
+plt.xlabel('Multiplier')
+plt.ylabel('Execution Time (ns)')
+plt.title('Execution Time of Regex Patterns vs. Multiplier')
+plt.legend()
+plt.grid(True, which="both", ls="--")
+plt.show()
+```
+
+
+# Acknowledgements
+
+Thanks to GPT-4 and Code Interpreter for helping me generate the plots for this blog post. I am notoriously bad at `matplotlib` so having GPT-4 generate the charts made it a lot easier for me.
+
+Also thanks to Ben Frederickson, who created the `py-spy` library and also wrote a great post on catastrophic backtracking (linked below).
+
+## Resources
+
+* [An article on catastrophic backtracking by Ben Frederickson, author of py-spy](https://www.benfrederickson.com/python-catastrophic-regular-expressions-and-the-gil/)
 * [An interesting paper on detecting catastrophic backtracking statically in Java](https://arxiv.org/abs/1405.5599)
