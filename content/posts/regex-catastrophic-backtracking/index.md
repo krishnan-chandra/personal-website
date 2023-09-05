@@ -56,7 +56,7 @@ Now that I knew the culprit was a regex and where it was being called, I looked 
 
 ```python
 pattern = r'<summary>((\n*.*\n*)*)</summary>'
-match = re.search(pattern, content.strip(), re.DOTALL)
+regex_match = re.search(pattern, content.strip(), re.DOTALL)
 ```
 
 This regex parses output that is returned from a large language model, and tries to match text within `<summary>` tags as output by the LLM. It also explicitly matches newlines before and after each block of text. It defines capture groups for the whole content of the summary tags, as well as each newline-delimited match group.
@@ -85,7 +85,7 @@ To avoid catastrophic backtracking, the key is to make the repeating subpattern 
 
 ```python
 pattern_str = r"<summary>(.*?)</summary>"
-match = re.search(pattern, content.strip())
+regex_match = re.search(pattern, content.strip())
 ```
 
 Now, we get the smallest possible sequence of characters that are in between `<summary>` tags. This avoids getting stuck trying to match newlines exhaustively, and is also much easier to read!
