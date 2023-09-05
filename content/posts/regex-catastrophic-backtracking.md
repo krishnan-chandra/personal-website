@@ -17,7 +17,7 @@ You can use py-spy on a specific process ID by running
 py-spy dump --pid <pid>
 ```
 
-The result came back and look like this:
+The result came back and looked like this:
 
 ```shell
   %Own   %Total  OwnTime  TotalTime  Function (filename)
@@ -40,7 +40,15 @@ The result came back and look like this:
 
 This application is a [Scrapy](https://scrapy.org/) spider, which explains why Scrapy and Twisted show up in the stack trace.
 
-This immediately showed that the search function from Python's `re` regex module was taking up 100% of the process time.
+Here is what the various items mean:
+
+* `%Own`: % of time currently spent in the function.
+* `%Total`: % of time currently spent in the function and all the functions it called (children).
+* `OwnTime`: Total amount of CPU time that was spent in the function itself, excluding any functions it called.
+* `TotalTime`: Total amount of CPU time that was spent in the function and all its children.
+* `Function (filename)`: This is the name of the function and the file where it is defined.
+
+This immediately showed that the [`re.search`](https://docs.python.org/3/library/re.html#re.search) function from Python's regex module was taking up 100% of the process time, and the execution time was spent in this function directly rather than in any functions that it calls.
 
 # Catastrophic Backtracking in Regular Expressions
 
@@ -57,15 +65,15 @@ So what's the problem here?
 
 As it turns out, the problem is twofold:
 
-1. By default, regular expressions are matched greedily. If we look at the [Python documentation](https://docs.python.org/3/library/re.html#regular-expression-syntax), we see:
+1. By default, the match characters for `*` (zero or more), `+` (one or more), and `?` (zero or one) are matched greedily. If we look at the [Python documentation](https://docs.python.org/3/library/re.html#regular-expression-syntax), we see:
 
     > `*?`, `+?`, `??`
     >
     > The `'*'`, `'+'`, and `'?'` quantifiers are all greedy; they match as much text as possible. Sometimes this behaviour isn’t desired; if the RE `<.*>` is matched against `<a> b <c>`, it will match the entire string, and not just `<a>`. Adding ? after the quantifier makes it perform the match in non-greedy or minimal fashion; as few characters as possible will be matched. Using the RE `<.*?>` will match only `<a>`.
 
-    The problem is the `((\n*.*\n*)*)` part - by repeating a newline-sandwiched pattern greedily, it leads to exponential runtime on strings with many newlines, as the engine tries every possible way to match newlines.
+    The problem is the expression `((\n*.*\n*)*)` - by repeating a newline-sandwiched pattern greedily, it leads to exponential runtime on strings with many newlines, as the engine tries every possible way to match newlines.
 
-    This is known as catastrophic backtracking. The regex engine matches as far as it can initially with a greedy subpattern, then backtracks trying every possible matching combination before failing.
+    This is known as *catastrophic backtracking*. The regex engine matches as far as it can initially with a greedy subpattern, then backtracks trying every possible matching combination before failing.
 
 2. We were passing the [`re.DOTALL`](https://docs.python.org/3/library/re.html#re.DOTALL) flag when evaluating the regex. This flag makes the `.` character in regex match newlines. This further exacerbated the problem by including newlines surrounded by newlines as part of the match criteria!
 
@@ -90,5 +98,5 @@ Additionally, we use the [re.compile](https://docs.python.org/3/library/re.html#
 
 # Resources
 
-* [Another similar article from Ben Frederickson](https://www.benfrederickson.com/python-catastrophic-regular-expressions-and-the-gil/)
+* [An article on this same topic by Ben Frederickson, author of py-spy](https://www.benfrederickson.com/python-catastrophic-regular-expressions-and-the-gil/)
 * [An interesting paper on detecting catastrophic backtracking statically in Java](https://arxiv.org/abs/1405.5599)
