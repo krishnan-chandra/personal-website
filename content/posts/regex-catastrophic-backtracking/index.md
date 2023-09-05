@@ -149,55 +149,55 @@ if __name__ == "__main__":
 ### Results
 
 
-  Here were the results with various input values for `multiplier` from running on my laptop (Macbook Pro M1 Max, 32GB RAM) using Python 3.11.3.
+Here were the results with various input values for `multiplier` from running on my laptop (Macbook Pro M1 Max, 32GB RAM) using Python 3.11.3.
 
-  ```bash
-  Multiplier: 1
-  Problematic Regex Time: 2708
-  Simple Regex Time: 500
-  Ratio of Times: 5.416
-  ------------------------------
-
-
-
-  Multiplier: 10
-  Problematic Regex Time: 3292
-  Simple Regex Time: 292
-  Ratio of Times: 11.273972602739725
-  ------------------------------
+```bash
+Multiplier: 1
+Problematic Regex Time: 2708
+Simple Regex Time: 500
+Ratio of Times: 5.416
+------------------------------
 
 
 
-  Multiplier: 100
-  Problematic Regex Time: 19042
-  Simple Regex Time: 250
-  Ratio of Times: 76.168
-  ------------------------------
+Multiplier: 10
+Problematic Regex Time: 3292
+Simple Regex Time: 292
+Ratio of Times: 11.273972602739725
+------------------------------
 
 
 
-  Multiplier: 1000
-  Problematic Regex Time: 160291
-  Simple Regex Time: 250
-  Ratio of Times: 641.164
-  ------------------------------
+Multiplier: 100
+Problematic Regex Time: 19042
+Simple Regex Time: 250
+Ratio of Times: 76.168
+------------------------------
 
 
 
-  Multiplier: 10000
-  Problematic Regex Time: 1809958
-  Simple Regex Time: 708
-  Ratio of Times: 2556.437853107345
-  ------------------------------
+Multiplier: 1000
+Problematic Regex Time: 160291
+Simple Regex Time: 250
+Ratio of Times: 641.164
+------------------------------
 
 
 
-  Multiplier: 100000
-  Problematic Regex Time: 20424917
-  Simple Regex Time: 2792
-  Ratio of Times: 7315.514684813754
-  ------------------------------
-  ```
+Multiplier: 10000
+Problematic Regex Time: 1809958
+Simple Regex Time: 708
+Ratio of Times: 2556.437853107345
+------------------------------
+
+
+
+Multiplier: 100000
+Problematic Regex Time: 20424917
+Simple Regex Time: 2792
+Ratio of Times: 7315.514684813754
+------------------------------
+```
 
 As you can see, the problematic regex demonstrates increasingly poor performance on long input sequences, and scales incredibly poorly compared to the simple regex.
 
