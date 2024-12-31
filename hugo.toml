@@ -1,0 +1,90 @@
+title = "Krishnan Chandra"
+baseURL = "/"
+languageCode = "en-US"
+theme = "hugo-blog-awesome"
+
+# This defines how dates are formatted
+defaultContentLanguage = "en-us"
+disableKinds = ["RSS"]
+
+# Enable emojis globally
+enableEmoji = true
+
+
+[markup]
+[markup.highlight]
+style = "monokai"
+[markup.goldmark.renderer]
+unsafe = true
+[markup.tableOfContents]
+startLevel = 2  # ToC starts from H2
+endLevel = 4    # ToC ends at H4
+ordered = false # generates <ul> instead of <ol>
+
+
+[menu]
+[[menu.main]]
+# The page reference (pageRef) is useful for menu highlighting
+# When pageRef is set, setting `url` is optional; it will be used as a fallback if the page is not found.
+pageRef = "/"
+name = 'Home'
+weight = 10
+[[menu.main]]
+pageRef = "posts"
+name = "Posts"
+url = '/posts/'
+weight = 20
+[[menu.main]]
+pageRef = "about"
+name = "About"
+url = '/about/'
+weight = 30
+
+[params]
+sitename = "Krishnan's Dev Blog"
+defaultColor = "auto"
+mainSections = ['posts']
+toc = false                      # set to false to disable table of contents 'globally'
+goToTop = true                   # set to false to disable 'go to top' button
+
+# About the author
+[params.author]
+avatar = "img/profile.png" # put the file in assets folder; also ensure that image has same height and width
+# Note: image is not rendered if the resource(avatar image) is not found. No error is displayed.
+intro = "Krishnan's Dev Blog"
+name = "Krishnan Chandra"
+description = "A blog about my random adventures in software development."
+
+[[params.socialIcons]]
+name = "github"
+url = "https://github.com/krishnan-chandra"
+
+[[params.socialIcons]]
+name = "twitter"
+url = "https://twitter.com/krishnanc_"
+
+[[params.socialIcons]]
+name = "linkedin"
+url = "https://linkedin.com/in/krishnanchandra"
+
+[[params.socialIcons]]
+name = "email"
+url = "mailto:me@krishnanchandra.com"
+
+[[params.socialIcons]]
+name = "Rss"
+url = "index.xml"
+
+[privacy]
+[privacy.disqus]
+disable = true
+[privacy.googleAnalytics]
+disable = true
+[privacy.instagram]
+disable = true
+[privacy.twitter]
+disable = true
+[privacy.vimeo]
+disable = true
+[privacy.youtube]
+disable = true
