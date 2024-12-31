@@ -30,14 +30,12 @@ pageRef = "/"
 name = 'Home'
 weight = 10
 [[menu.main]]
-pageRef = "posts"
+pageRef = "/posts"
 name = "Posts"
-url = '/posts/'
 weight = 20
 [[menu.main]]
-pageRef = "about"
+pageRef = "/pages/about"
 name = "About"
-url = '/about/'
 weight = 30
 
 [params]
