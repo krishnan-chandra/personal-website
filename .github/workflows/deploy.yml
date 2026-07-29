@@ -2,15 +2,15 @@
 # The droplet never receives GitHub credentials; only a deploy SSH key is used.
 #
 # Required repository secrets:
-#   DEPLOY_HOST      - droplet hostname or IP
-#   DEPLOY_USER      - SSH user (e.g. deploy)
-#   DEPLOY_SSH_KEY   - private key for that user (ed25519 recommended)
+#   DEPLOY_HOST         - droplet hostname or IP
+#   DEPLOY_USER         - SSH user (e.g. deploy)
+#   DEPLOY_SSH_KEY      - private key for that user (ed25519 recommended)
+#   DEPLOY_KNOWN_HOSTS  - verified output of `ssh-keyscan -H <host>`
 #
 # Optional repository secrets:
 #   DEPLOY_PATH         - remote web root (default: /var/www/html)
 #   DEPLOY_REPO_PATH    - Hugo project root on the server (default: /root/personal-website)
 #   DEPLOY_PORT         - SSH port (default: 22)
-#   DEPLOY_KNOWN_HOSTS  - output of `ssh-keyscan -H <host>` (preferred over keyscan at runtime)
 #
 # Manual deploys: Actions → Deploy → Run workflow.
 # To ship a specific commit, set the "ref" input to a SHA, branch, or tag
@@ -69,18 +69,12 @@ jobs:
 
       - name: Trust host key
         env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
           DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
         run: |
+          : "${DEPLOY_KNOWN_HOSTS:?DEPLOY_KNOWN_HOSTS secret is required}"
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          if [ -n "${DEPLOY_KNOWN_HOSTS}" ]; then
-            printf '%s\n' "${DEPLOY_KNOWN_HOSTS}" > ~/.ssh/known_hosts
-          else
-            port="${DEPLOY_PORT:-22}"
-            ssh-keyscan -p "${port}" -H "${DEPLOY_HOST}" >> ~/.ssh/known_hosts
-          fi
+          printf '%s\n' "${DEPLOY_KNOWN_HOSTS}" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
 
       - name: Deploy with rsync
