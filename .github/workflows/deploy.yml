@@ -83,21 +83,6 @@ jobs:
           fi
           chmod 600 ~/.ssh/known_hosts
 
-      - name: Sync Hugo config to server
-        env:
-          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
-          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
-          DEPLOY_REPO_PATH: ${{ secrets.DEPLOY_REPO_PATH }}
-          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
-        run: |
-          : "${DEPLOY_HOST:?DEPLOY_HOST secret is required}"
-          : "${DEPLOY_USER:?DEPLOY_USER secret is required}"
-          port="${DEPLOY_PORT:-22}"
-          repo_path="${DEPLOY_REPO_PATH:-/root/personal-website}"
-          rsync -avz \
-            -e "ssh -p ${port} -o StrictHostKeyChecking=yes" \
-            hugo.toml "${DEPLOY_USER}@${DEPLOY_HOST}:${repo_path}/hugo.toml"
-
       - name: Deploy with rsync
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
