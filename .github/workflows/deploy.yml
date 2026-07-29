@@ -9,7 +9,6 @@
 #
 # Optional repository secrets:
 #   DEPLOY_PATH         - remote web root (default: /var/www/html)
-#   DEPLOY_REPO_PATH    - Hugo project root on the server (default: /root/personal-website)
 #   DEPLOY_PORT         - SSH port (default: 22)
 #
 # Manual deploys: Actions → Deploy → Run workflow.
@@ -47,6 +46,7 @@ jobs:
           # branch holds this workflow file (usually main).
           ref: ${{ github.event.inputs.ref || github.sha }}
           submodules: recursive
+          persist-credentials: false
           # Full history so .GitInfo / .Lastmod work if templates use them.
           fetch-depth: 0
 
