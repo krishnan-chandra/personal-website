@@ -94,8 +94,6 @@ jobs:
           : "${DEPLOY_USER:?DEPLOY_USER secret is required}"
           port="${DEPLOY_PORT:-22}"
           repo_path="${DEPLOY_REPO_PATH:-/root/personal-website}"
-          ssh -p "${port}" -o StrictHostKeyChecking=yes \
-            "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${repo_path}'"
           rsync -avz \
             -e "ssh -p ${port} -o StrictHostKeyChecking=yes" \
             hugo.toml "${DEPLOY_USER}@${DEPLOY_HOST}:${repo_path}/hugo.toml"
