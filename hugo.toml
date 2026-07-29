@@ -1,10 +1,12 @@
 title = "Krishnan Chandra"
 baseURL = "/"
-languageCode = "en-US"
 theme = "hugo-blog-awesome"
 
 # This defines how dates are formatted
 defaultContentLanguage = "en-us"
+defaultContentLanguageInSubdir = false
+disableDefaultLanguageRedirect = false
+disableLanguages = []
 disableKinds = ["RSS"]
 
 # Enable emojis globally
@@ -31,15 +33,15 @@ name = 'Home'
 weight = 10
 [[menu.main]]
 pageRef = "/posts"
-name    = "Posts"
-weight  = 20
+name = "Posts"
+weight = 20
 [[menu.main]]
-url    = "/pages/about"
-name   = "About"
+url = "/pages/about"
+name = "About"
 weight = 30
 
 [params]
-sitename = "Krishnan's Dev Blog"
+sitename = "Krishnan's Blog"
 defaultColor = "auto"
 mainSections = ['posts']
 toc = false                      # set to false to disable table of contents 'globally'
@@ -49,7 +51,7 @@ goToTop = true                   # set to false to disable 'go to top' button
 [params.author]
 avatar = "img/profile.png" # put the file in assets folder; also ensure that image has same height and width
 # Note: image is not rendered if the resource(avatar image) is not found. No error is displayed.
-intro = "Krishnan's Dev Blog"
+intro = "Krishnan's Blog"
 name = "Krishnan Chandra"
 description = "A blog about my random adventures in software development."
 
@@ -80,7 +82,7 @@ disable = true
 disable = true
 [privacy.instagram]
 disable = true
-[privacy.twitter]
+[privacy.x]
 disable = true
 [privacy.vimeo]
 disable = true
