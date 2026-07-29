@@ -1,0 +1,95 @@
+# Build the Hugo site in CI and rsync public/ to the DigitalOcean droplet over SSH.
+# The droplet never receives GitHub credentials; only a deploy SSH key is used.
+#
+# Required repository secrets:
+#   DEPLOY_HOST      - droplet hostname or IP
+#   DEPLOY_USER      - SSH user (e.g. deploy)
+#   DEPLOY_SSH_KEY   - private key for that user (ed25519 recommended)
+#
+# Optional repository secrets:
+#   DEPLOY_PATH         - remote web root (default: /var/www/html)
+#   DEPLOY_PORT         - SSH port (default: 22)
+#   DEPLOY_KNOWN_HOSTS  - output of `ssh-keyscan -H <host>` (preferred over keyscan at runtime)
+#
+# Manual deploys: Actions → Deploy → Run workflow.
+# To ship a specific commit, set the "ref" input to a SHA, branch, or tag
+# (e.g. ff05c1e). Leave blank to deploy the branch tip selected in the UI.
+
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Git ref to deploy (branch, tag, or SHA). Leave blank for the selected branch tip.
+        required: false
+        type: string
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # workflow_dispatch can target an older SHA without changing which
+          # branch holds this workflow file (usually main).
+          ref: ${{ github.event.inputs.ref || github.sha }}
+          submodules: recursive
+          # Full history so .GitInfo / .Lastmod work if templates use them.
+          fetch-depth: 0
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.164.0"
+          extended: true
+
+      - name: Build
+        run: hugo --minify -t hugo-blog-awesome
+
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Trust host key
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          if [ -n "${DEPLOY_KNOWN_HOSTS}" ]; then
+            printf '%s\n' "${DEPLOY_KNOWN_HOSTS}" > ~/.ssh/known_hosts
+          else
+            port="${DEPLOY_PORT:-22}"
+            ssh-keyscan -p "${port}" -H "${DEPLOY_HOST}" >> ~/.ssh/known_hosts
+          fi
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy with rsync
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+        run: |
+          : "${DEPLOY_HOST:?DEPLOY_HOST secret is required}"
+          : "${DEPLOY_USER:?DEPLOY_USER secret is required}"
+          port="${DEPLOY_PORT:-22}"
+          path="${DEPLOY_PATH:-/var/www/html}"
+          rsync -avz --delete \
+            -e "ssh -p ${port} -o StrictHostKeyChecking=yes" \
+            public/ "${DEPLOY_USER}@${DEPLOY_HOST}:${path}/"
