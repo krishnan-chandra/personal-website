@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# verify-hugo-screenshot — capture responsive screenshots and overflow checks via Playwright.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+usage() {
+  cat <<EOF
+Usage: verify-hugo-screenshot --url URL --viewport desktop|mobile --out PATH [--aria PATH]
+
+Captures a full-page PNG and writes overflow/viewport diagnostics to stderr.
+Uses Playwright (installed on first run via npx).
+
+Examples:
+  verify-hugo-screenshot --url http://127.0.0.1:1314/ --viewport desktop --out home/desktop.png
+  verify-hugo-screenshot --url http://127.0.0.1:1314/posts/ --viewport mobile --out posts/mobile.png --aria posts/mobile.aria.txt
+EOF
+}
+
+URL=""
+VIEWPORT=""
+OUT=""
+ARIA=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --url) URL="$2"; shift 2 ;;
+    --viewport) VIEWPORT="$2"; shift 2 ;;
+    --out) OUT="$2"; shift 2 ;;
+    --aria) ARIA="$2"; shift 2 ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "unknown arg: $1" >&2; usage; exit 1 ;;
+  esac
+done
+
+[[ -n "${URL}" && -n "${VIEWPORT}" && -n "${OUT}" ]] || { usage; exit 1; }
+
+case "${VIEWPORT}" in
+  desktop) WIDTH=1280; HEIGHT=800; MOBILE=false ;;
+  mobile) WIDTH=375; HEIGHT=667; MOBILE=true ;;
+  *) echo "viewport must be desktop or mobile" >&2; exit 1 ;;
+esac
+
+mkdir -p "$(dirname "${OUT}")"
+[[ -n "${ARIA}" ]] && mkdir -p "$(dirname "${ARIA}")"
+
+export VERIFY_SCREENSHOT_URL="${URL}"
+export VERIFY_SCREENSHOT_WIDTH="${WIDTH}"
+export VERIFY_SCREENSHOT_HEIGHT="${HEIGHT}"
+export VERIFY_SCREENSHOT_MOBILE="${MOBILE}"
+export VERIFY_SCREENSHOT_OUT="${OUT}"
+export VERIFY_SCREENSHOT_ARIA="${ARIA}"
+
+cd "${ROOT}"
+npx --yes playwright@1.49.1 install chromium >/dev/null 2>&1 || npx --yes playwright@1.49.1 install chromium
+node "${SCRIPT_DIR}/screenshot.mjs"
