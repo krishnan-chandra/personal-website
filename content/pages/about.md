@@ -4,6 +4,8 @@ description: About the Author
 author: Krishnan Chandra
 date: 2026-08-10T00:00:00.000Z
 ---
+{{< about-photo >}}
+
 Hello! I'm Krishnan Chandra, a software engineer based in New York City. I love building impactful solutions with distributed systems.
 
 I'm currently Head of Applied AI at [Aaru](https://aaru.com), where I'm focused on turning our simulation technology into agentic products for different verticals.
