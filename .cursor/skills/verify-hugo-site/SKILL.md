@@ -44,6 +44,22 @@ Run before driving whenever anything looks wrong:
 
 Pass criteria: exit 0, `home_http: 200`, non-empty `home_title`, pid owns `VERIFY_HUGO_PORT` (default 1314).
 
+## When to verify
+
+**Any page you modify must be verified before the task is done.** Match the change to a feature map entry (or add one under `features/` first):
+
+| Change touches | Verify |
+|----------------|--------|
+| `content/_index.md`, home layout, bio partial | [Home](./features/home.md) |
+| `content/posts/_index.md`, list layout | [Posts list](./features/posts-list.md) |
+| A specific post under `content/posts/` | [Blog post](./features/blog-post.md) — use that post's URL |
+| `content/pages/about.md` or other standalone pages | [About](./features/about.md) or a new feature file |
+| Nav, header, theme SCSS breakpoints | [Mobile navigation](./features/mobile-navigation.md) **and** every page you changed |
+
+Capture desktop **and** mobile screenshots for each affected page. A layout or theme change can break responsiveness on pages you didn't edit — run the full proof script when shared assets change.
+
+**Prerequisites:** `npm install` and `npx playwright install chromium` (once per machine).
+
 ## Drive
 
 Read `.cursor/skills/verify-hugo-site/features/README.md`, then the feature file for the behavior under test.
@@ -133,7 +149,9 @@ All invocations from repo root:
 | `verify-hugo stop` | Stop verification server |
 | `verify-hugo-screenshot` | Playwright full-page screenshot + overflow check at desktop/mobile viewport |
 
-Scripts live in `.cursor/skills/verify-hugo-site/bin/` (must be executable). `verify-hugo-screenshot` installs Chromium via `npx playwright` on first run.
+| `verify-hugo-proof.sh` | Screenshot all mapped pages at desktop + mobile (full regression) |
+
+Scripts live in `.cursor/skills/verify-hugo-site/bin/` (must be executable). Requires project `devDependencies.playwright` and browsers from `npx playwright install chromium`.
 
 Environment overrides: `VERIFY_RUN_ID`, `VERIFY_HUGO_PORT`, `VERIFY_HUGO_BIND`, `VERIFY_STATE_DIR`, `VERIFY_ARTIFACTS_DIR`.
 

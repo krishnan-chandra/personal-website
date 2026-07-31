@@ -17,6 +17,15 @@ const context = await browser.newContext({
 const page = await context.newPage();
 await page.goto(url, { waitUntil: 'networkidle' });
 
+const prep = process.env.VERIFY_SCREENSHOT_PREP || '';
+if (prep === 'open-mobile-menu') {
+  await page.locator('#menu-trigger').evaluate((el) => {
+    el.checked = true;
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+  });
+  await page.locator('a.menu-link', { hasText: 'Posts' }).waitFor({ state: 'visible' });
+}
+
 const metrics = await page.evaluate(() => ({
   overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
   scrollWidth: document.documentElement.scrollWidth,

@@ -53,5 +53,8 @@ export VERIFY_SCREENSHOT_OUT="${OUT}"
 export VERIFY_SCREENSHOT_ARIA="${ARIA}"
 
 cd "${ROOT}"
-npx --yes playwright@1.49.1 install chromium >/dev/null 2>&1 || npx --yes playwright@1.49.1 install chromium
+if [[ ! -d node_modules/playwright ]]; then
+  echo "error: playwright not installed. Run: npm install && npx playwright install chromium" >&2
+  exit 1
+fi
 node "${SCRIPT_DIR}/screenshot.mjs"

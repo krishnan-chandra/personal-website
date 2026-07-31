@@ -25,7 +25,7 @@ Preconditions:
 
 - **Navigate.** Open `http://127.0.0.1:1314/`.
 - **Closed state.** Snapshot: nav links in `.trigger` should not be interactable/visible until menu opens (theme uses checkbox `:not(:checked) ~ .trigger { visibility: hidden }`).
-- **Open menu.** Click the label for `#menu-trigger` (menu icon). Run `browser_click` on the menu icon label/snapshot ref. Snapshot must list links `Home`, `Posts`, `About`. Screenshot → `mobile-nav/menu-open.png`.
+- **Open menu.** Toggle `#menu-trigger` (the hamburger uses a CSS checkbox; the label may not be Playwright-visible). Run `browser_click` on the menu icon label, or set the checkbox via CDP/Playwright: `document.getElementById('menu-trigger').checked = true`. Snapshot must list links `Home`, `Posts`, `About`. Screenshot → `mobile-nav/menu-open.png`.
 - **Navigate via menu.** Click `Posts`. URL becomes `/posts/`; Posts link active. Screenshot → `mobile-nav/posts-via-menu.png`.
 - **Desktop regression.** Reset CDP to 1280×800; inline links visible without opening hamburger. Screenshot → `mobile-nav/desktop-inline-nav.png`.
 

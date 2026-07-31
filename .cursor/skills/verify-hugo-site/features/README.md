@@ -54,6 +54,18 @@ Expect `overflow: false`. The `<meta name="viewport" content="width=device-width
 - File naming: `artifacts/<feature>/<viewport>.{png,aria.txt}` (e.g. `home/desktop.png`).
 - Never kill processes by name; only `verify-hugo stop` (by pid file).
 
+## Modified pages must be verified
+
+After any edit, identify every **user-facing URL** the change affects and verify each one at desktop and mobile before finishing the task. Content edits verify that page's URL; theme or layout edits verify every mapped page (run `verify-hugo-proof.sh` for a full regression).
+
+Add a feature file first if you introduce a new standalone page or route.
+
+Full regression (all mapped pages, both viewports):
+
+```bash
+.cursor/skills/verify-hugo-site/bin/verify-hugo-proof.sh
+```
+
 ## Proof and skip reporting
 
 - Exercise the real user path through Hugo's embedded server ([hugo server docs](https://gohugo.io/commands/hugo_server/)), not raw `public/` files unless comparing production build output.
