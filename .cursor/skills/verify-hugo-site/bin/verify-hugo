@@ -11,6 +11,7 @@ STATE_DIR="${VERIFY_STATE_DIR:-/tmp/verify-hugo-${RUN_ID}}"
 PID_FILE="${STATE_DIR}/hugo.pid"
 LOG_FILE="${STATE_DIR}/hugo.log"
 ARTIFACTS_DIR="${VERIFY_ARTIFACTS_DIR:-${ROOT}/.verify/artifacts/${RUN_ID}}"
+ARTIFACTS_ROOT="${ROOT}/.verify/artifacts"
 
 usage() {
   cat <<EOF
@@ -28,7 +29,7 @@ Environment:
   VERIFY_HUGO_PORT    Port (default: 1314; avoids dev default 1313)
   VERIFY_HUGO_BIND    Bind address (default: 127.0.0.1)
   VERIFY_STATE_DIR    State dir (default: /tmp/verify-hugo-\$RUN_ID)
-  VERIFY_ARTIFACTS_DIR Proof output dir (default: .verify/artifacts/\$RUN_ID)
+  VERIFY_ARTIFACTS_DIR Proof output dir (default: .verify/artifacts/\$RUN_ID; previous default-tree runs are deleted on launch)
 
 Hugo server flags follow https://gohugo.io/commands/hugo_server/
 EOF
@@ -52,8 +53,27 @@ port_owner_pid() {
   lsof -tiTCP:"${PORT}" -sTCP:LISTEN 2>/dev/null | head -1 || true
 }
 
+cleanup_previous_artifacts() {
+  # Skip when caller pins a custom artifacts path outside the default tree.
+  if [[ -n "${VERIFY_ARTIFACTS_DIR:-}" ]]; then
+    return 0
+  fi
+  if [[ ! -d "${ARTIFACTS_ROOT}" ]]; then
+    return 0
+  fi
+  local dir name
+  for dir in "${ARTIFACTS_ROOT}"/*; do
+    [[ -d "${dir}" ]] || continue
+    name="$(basename "${dir}")"
+    [[ "${name}" == "${RUN_ID}" ]] && continue
+    rm -rf "${dir}"
+    echo "cleaned previous artifacts: ${dir}"
+  done
+}
+
 launch() {
   require_hugo >/dev/null
+  cleanup_previous_artifacts
   mkdir -p "${STATE_DIR}" "${ARTIFACTS_DIR}"
 
   if [[ -f "${PID_FILE}" ]]; then

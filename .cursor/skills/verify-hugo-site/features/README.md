@@ -17,7 +17,7 @@ export VERIFY_RUN_ID="manual-$(date +%s)"
 ```
 
 - Base URL defaults to `http://127.0.0.1:1314/` (`VERIFY_HUGO_PORT` overrides).
-- Artifacts go to `.verify/artifacts/$VERIFY_RUN_ID/` and **survive** `verify-hugo stop`.
+- Artifacts go to `.verify/artifacts/$VERIFY_RUN_ID/` for the current run. Older runs under `.verify/artifacts/` are deleted automatically on the next `verify-hugo launch`.
 
 ## Responsive conventions
 

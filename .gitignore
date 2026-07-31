@@ -27,6 +27,9 @@ node_modules
 # Site directory
 _site
 
+# Verification proof artifacts (regenerated locally)
+.verify/
+
 # Public directories (these files are compiled)
 public/
 resources/

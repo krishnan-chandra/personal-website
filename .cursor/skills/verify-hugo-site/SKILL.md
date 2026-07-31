@@ -106,12 +106,14 @@ Expect `overflow: false` and viewport meta `width=device-width, initial-scale=1.
 
 ## Evidence
 
-Artifacts root (persists after stop):
+Artifacts root (persists after stop, replaced on the next launch):
 
 ```bash
 ARTIFACTS="$(.cursor/skills/verify-hugo-site/bin/verify-hugo artifacts)"
 # default: .verify/artifacts/$VERIFY_RUN_ID/
 ```
+
+Each `verify-hugo launch` deletes other directories under `.verify/artifacts/` so proof PNGs do not accumulate locally. The current run's artifacts survive `verify-hugo stop`.
 
 Per feature, per viewport:
 
@@ -132,7 +134,7 @@ Per feature, per viewport:
 .cursor/skills/verify-hugo-site/bin/verify-hugo stop
 ```
 
-Removes the verification server and pid file only. **Do not delete** `.verify/artifacts/$VERIFY_RUN_ID/`.
+Removes the verification server and pid file only. **Do not delete** the current run's artifacts manually — the next `verify-hugo launch` cleans up previous runs under `.verify/artifacts/`.
 
 Optional: remove state dir `rm -rf /tmp/verify-hugo-$VERIFY_RUN_ID` (logs only, not proof).
 
