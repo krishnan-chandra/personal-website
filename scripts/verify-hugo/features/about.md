@@ -19,7 +19,7 @@ The About page is a standalone content page describing Krishnan's background, re
 Preconditions:
 
 - `verify-hugo doctor` passes.
-- `mkdir -p "$(verify-hugo artifacts)/about"`.
+- `mkdir -p "$(scripts/verify-hugo/bin/verify-hugo artifacts)/about"`.
 
 - **Navigate.** Open `http://127.0.0.1:1314/pages/about/`.
 - **Desktop (1280×800).** Snapshot expects heading `About`, body text mentioning `Krishnan Chandra`, and links such as `Aaru` or `Ramp`. Screenshot → `about/desktop.png`.

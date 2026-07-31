@@ -21,7 +21,7 @@ Preconditions:
 
 - `verify-hugo doctor` passes.
 - CDP viewport 375×667, mobile true.
-- `mkdir -p "$(verify-hugo artifacts)/mobile-nav"`.
+- `mkdir -p "$(scripts/verify-hugo/bin/verify-hugo artifacts)/mobile-nav"`.
 
 - **Navigate.** Open `http://127.0.0.1:1314/`.
 - **Closed state.** Snapshot: nav links in `.trigger` should not be interactable/visible until menu opens (theme uses checkbox `:not(:checked) ~ .trigger { visibility: hidden }`).

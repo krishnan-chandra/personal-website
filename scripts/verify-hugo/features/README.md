@@ -12,8 +12,8 @@ Read this index before driving the app, then open the matching feature file for 
 
 ```bash
 export VERIFY_RUN_ID="manual-$(date +%s)"
-.cursor/skills/verify-hugo-site/bin/verify-hugo launch
-.cursor/skills/verify-hugo-site/bin/verify-hugo doctor
+scripts/verify-hugo/bin/verify-hugo launch
+scripts/verify-hugo/bin/verify-hugo doctor
 ```
 
 - Base URL defaults to `http://127.0.0.1:1314/` (`VERIFY_HUGO_PORT` overrides).
@@ -63,7 +63,7 @@ Add a feature file first if you introduce a new standalone page or route.
 Full regression (all mapped pages, both viewports):
 
 ```bash
-.cursor/skills/verify-hugo-site/bin/verify-hugo-proof.sh
+scripts/verify-hugo/bin/verify-hugo-proof.sh
 ```
 
 ## Proof and skip reporting

@@ -2,7 +2,7 @@
 # verify-hugo — launch, doctor, and teardown for Hugo dev-server verification runs.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 RUN_ID="${VERIFY_RUN_ID:-verify-$$}"
 PORT="${VERIFY_HUGO_PORT:-1314}"
 BIND="${VERIFY_HUGO_BIND:-127.0.0.1}"

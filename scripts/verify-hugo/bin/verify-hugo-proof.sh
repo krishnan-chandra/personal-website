@@ -2,7 +2,7 @@
 # verify-hugo-proof — run desktop + mobile screenshots for every mapped page.
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 BIN="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cd "${ROOT}"

@@ -19,7 +19,7 @@ The posts archive groups every published blog post by year at `/posts/`, newest 
 Preconditions:
 
 - `verify-hugo doctor` passes.
-- `mkdir -p "$(verify-hugo artifacts)/posts-list"`.
+- `mkdir -p "$(scripts/verify-hugo/bin/verify-hugo artifacts)/posts-list"`.
 
 - **Navigate.** Open `http://127.0.0.1:1314/posts/`.
 - **Desktop (1280×800).** Snapshot expects page heading `Posts`, at least one `h2` year heading, and post links including `Debugging Catastrophic Backtracking for Regular Expressions in Python`. Screenshot → `posts-list/desktop.png`, snapshot → `posts-list/desktop.aria.txt`.

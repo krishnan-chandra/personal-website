@@ -20,7 +20,7 @@ The home page shows Krishnan's author bio (avatar, intro, social links) and the 
 Preconditions:
 
 - `verify-hugo doctor` reports HTTP 200 at `http://127.0.0.1:1314/` and a non-empty `home_title`.
-- Artifacts directory exists: `mkdir -p "$(verify-hugo artifacts)/home"`.
+- Artifacts directory exists: `mkdir -p "$(scripts/verify-hugo/bin/verify-hugo artifacts)/home"`.
 
 - **Navigate.** Open `http://127.0.0.1:1314/`. Run `browser_navigate` with that URL.
 - **Desktop viewport.** CDP `Emulation.setDeviceMetricsOverride` with width 1280, height 800, mobile false.

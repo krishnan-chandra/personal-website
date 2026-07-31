@@ -19,7 +19,7 @@ A single blog post renders its title, date, optional table of contents, Markdown
 Preconditions:
 
 - `verify-hugo doctor` passes.
-- `mkdir -p "$(verify-hugo artifacts)/blog-post"`.
+- `mkdir -p "$(scripts/verify-hugo/bin/verify-hugo artifacts)/blog-post"`.
 
 - **Navigate.** Open `http://127.0.0.1:1314/posts/regex-catastrophic-backtracking/`.
 - **Desktop (1280×800).** Snapshot expects `h1` containing `Debugging Catastrophic Backtracking`, a `time` element, and a `code` or pre block with `py-spy`. Full-page screenshot → `blog-post/desktop.png`.
