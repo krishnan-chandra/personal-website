@@ -32,59 +32,97 @@
         "values": [
           {
             "tier": "Batch / Flex (50% off)",
+            "label": "Batch / Flex",
             "price": 0.5,
             "speed": 0.35,
-            "kind": "Discount"
+            "kind": "Discount",
+            "dx": -8,
+            "dy": 14
           },
           {
             "tier": "Standard",
+            "label": "Standard",
             "price": 1.0,
             "speed": 1.0,
-            "kind": "Standard"
+            "kind": "Standard",
+            "dx": 8,
+            "dy": 14
           },
           {
             "tier": "Opus / Sol Fast (advertised, output only)",
+            "label": "Opus / Sol Fast (advertised)",
             "price": 2.0,
             "speed": 2.5,
-            "kind": "Fast"
+            "kind": "Fast",
+            "dx": 8,
+            "dy": -10
           },
           {
             "tier": "Fast (effective on agent loops)",
+            "label": "Fast (effective, agentic)",
             "price": 2.0,
             "speed": 1.2,
-            "kind": "Fast"
+            "kind": "Fast",
+            "dx": 8,
+            "dy": 14
           },
           {
             "tier": "Codex subscription Fast",
+            "label": "Codex sub Fast",
             "price": 2.5,
             "speed": 1.5,
-            "kind": "Fast"
+            "kind": "Fast",
+            "dx": 8,
+            "dy": -4
           },
           {
             "tier": "Composer 2.5 Fast (at 2.5x claim)",
+            "label": "Composer 2.5 Fast",
             "price": 6.0,
             "speed": 2.5,
-            "kind": "Fast"
+            "kind": "Fast",
+            "dx": -90,
+            "dy": -4
           }
         ]
       },
-      "mark": { "type": "point", "filled": true, "size": 140 },
-      "encoding": {
-        "color": {
-          "field": "kind",
-          "type": "nominal",
-          "title": "Tier type",
-          "scale": {
-            "domain": ["Discount", "Standard", "Fast"],
-            "range": ["#3f8f4f", "#333333", "#d64545"]
+      "layer": [
+        {
+          "mark": { "type": "point", "filled": true, "size": 140 },
+          "encoding": {
+            "color": {
+              "field": "kind",
+              "type": "nominal",
+              "title": "Tier type",
+              "scale": {
+                "domain": ["Discount", "Standard", "Fast"],
+                "range": ["#3f8f4f", "#333333", "#d64545"]
+              },
+              "legend": { "orient": "top-right" }
+            },
+            "tooltip": [
+              { "field": "tier", "title": "Tier" },
+              { "field": "price", "title": "Price multiplier" },
+              { "field": "speed", "title": "Speed multiplier" }
+            ]
           }
         },
-        "tooltip": [
-          { "field": "tier", "title": "Tier" },
-          { "field": "price", "title": "Price multiplier" },
-          { "field": "speed", "title": "Speed multiplier" }
-        ]
-      }
+        {
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "middle",
+            "fontSize": 11,
+            "fontWeight": "normal"
+          },
+          "encoding": {
+            "text": { "field": "label" },
+            "color": { "field": "kind", "type": "nominal", "legend": null },
+            "dx": { "field": "dx" },
+            "dy": { "field": "dy" }
+          }
+        }
+      ]
     }
   ],
   "config": {
