@@ -1,0 +1,94 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": "What a dollar of 'speed' actually buys",
+  "width": "container",
+  "height": 380,
+  "encoding": {
+    "x": {
+      "field": "price",
+      "type": "quantitative",
+      "title": "Price multiplier vs. standard",
+      "scale": { "domain": [0, 6.5] }
+    },
+    "y": {
+      "field": "speed",
+      "type": "quantitative",
+      "title": "Speed multiplier vs. standard",
+      "scale": { "domain": [0, 3] }
+    }
+  },
+  "layer": [
+    {
+      "data": {
+        "values": [
+          { "price": 0, "speed": 0 },
+          { "price": 3, "speed": 3 }
+        ]
+      },
+      "mark": { "type": "line", "strokeDash": [6, 4], "color": "#999999" }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "tier": "Batch / Flex (50% off)",
+            "price": 0.5,
+            "speed": 0.35,
+            "kind": "Discount"
+          },
+          {
+            "tier": "Standard",
+            "price": 1.0,
+            "speed": 1.0,
+            "kind": "Standard"
+          },
+          {
+            "tier": "Opus / Sol Fast (advertised, output only)",
+            "price": 2.0,
+            "speed": 2.5,
+            "kind": "Fast"
+          },
+          {
+            "tier": "Fast (effective on agent loops)",
+            "price": 2.0,
+            "speed": 1.2,
+            "kind": "Fast"
+          },
+          {
+            "tier": "Codex subscription Fast",
+            "price": 2.5,
+            "speed": 1.5,
+            "kind": "Fast"
+          },
+          {
+            "tier": "Composer 2.5 Fast (at 2.5x claim)",
+            "price": 6.0,
+            "speed": 2.5,
+            "kind": "Fast"
+          }
+        ]
+      },
+      "mark": { "type": "point", "filled": true, "size": 140 },
+      "encoding": {
+        "color": {
+          "field": "kind",
+          "type": "nominal",
+          "title": "Tier type",
+          "scale": {
+            "domain": ["Discount", "Standard", "Fast"],
+            "range": ["#3f8f4f", "#333333", "#d64545"]
+          }
+        },
+        "tooltip": [
+          { "field": "tier", "title": "Tier" },
+          { "field": "price", "title": "Price multiplier" },
+          { "field": "speed", "title": "Speed multiplier" }
+        ]
+      }
+    }
+  ],
+  "config": {
+    "view": { "stroke": null },
+    "axis": { "grid": true }
+  }
+}

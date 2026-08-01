@@ -36,9 +36,9 @@ Above Standard sits Fast mode: 2x API pricing for Claude and Sol, 2.5x Codex sub
 
 The pattern is asymmetric. Going *down* the curve buys you 50% off for latency you often do not need. Going *up* charges a premium that grows faster than the speed gain, especially once you account for how agentic work actually runs.
 
-![Price multiplier vs effective speed multiplier for common inference tiers](img/price_latency_curve.png)
+{{< vega id="price-latency" file="price_latency.vl.json" >}}
 
-Points above the fair-value diagonal cost more than the speed is worth. Points below it are bargains you should be using more. Fast mode clusters above the line. Batch and Flex cluster below it.
+Hover a point for tier details. The dashed line is fair value, where a price multiplier buys the same speed multiplier. Points above the line cost more than the speed is worth. Points below it are bargains you should be using more. Fast mode clusters above the line. Batch and Flex cluster below it.
 
 **The rule I follow: route down the price-latency curve, not up.** Bulk work (eval runs, migrations, overnight refactors, doc generation) goes to Batch or Flex at half price. Interactive work stays on Standard. I do not live above Standard unless something is genuinely break-glass.
 
