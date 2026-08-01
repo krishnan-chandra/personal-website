@@ -38,7 +38,7 @@ The pattern is asymmetric. Going *down* the curve buys you 50% off for latency y
 
 {{< vega id="price-latency" file="price_latency.vl.json" >}}
 
-Hover a point for tier details. The dashed line is fair value, where a price multiplier buys the same speed multiplier. Points above the line cost more than the speed is worth. Points below it are bargains you should be using more. Fast mode clusters above the line. Batch and Flex cluster below it.
+Hover a bar for the full tier name. The dashed line is standard pricing (1x). Batch and Flex sit at half price. Fast modes sit at 2x to 6x for the same model weights. Speed claims belong in the table below; this chart only shows what you pay.
 
 **The rule I follow: route down the price-latency curve, not up.** Bulk work (eval runs, migrations, overnight refactors, doc generation) goes to Batch or Flex at half price. Interactive work stays on Standard. I do not live above Standard unless something is genuinely break-glass.
 
@@ -66,7 +66,7 @@ This is the part of the pricing that is closest to "paying for something you do 
 
 **Cache re-pricing is a trap.** In Claude Code, enabling fast mode mid-conversation re-prices your entire cached context at the fast rate from the first token. Fast mode also draws from usage credits immediately and does not count against plan-included usage. That is the mechanism behind "drain your usage faster," and it is buried in the billing docs, not the marketing.
 
-That is why even the labs' advertised points sit in a worse place than they look. A 2.5x OTPS claim is output generation only. Once input is taxed at 2x and tool time is unchanged, wall-clock speed falls while the price multiplier stays put. Fast mode remains above the fair-value line.
+A 2.5x OTPS claim is output generation only. Once input is taxed at 2x and tool time is unchanged, wall-clock speed falls while the price multiplier stays put. The chart above only shows the cost side of that deal. The speed side is weaker than the marketing number once you are in an agent loop.
 
 ## Two objections, two answers
 
@@ -93,7 +93,7 @@ And yet Cursor ships two tiers of the same model:
 | Standard | $0.50 / MTok | $2.50 / MTok | Same intelligence, lower throughput |
 | Fast (default) | $3.00 / MTok | $15.00 / MTok | Same intelligence, higher throughput |
 
-Six times the price. Zero difference in intelligence. Cursor's own docs say the fast variant has "the same intelligence." Cursor does not publish a speed multiplier for the Fast tier. Even if you grant the most generous industry claim (2.5x output throughput, the same number Anthropic and OpenAI advertise for their own fast modes), you are paying 6x for 2.5x. That is the worst point on the chart.
+Six times the price. Zero difference in intelligence. Cursor's own docs say the fast variant has "the same intelligence." Cursor does not publish a speed multiplier for the Fast tier. Even if you grant the most generous industry claim (2.5x output throughput, the same number Anthropic and OpenAI advertise for their own fast modes), you are paying 6x for 2.5x. That is the worst price on the chart.
 
 Worse, Fast is on by default. There is no separate "Composer 2.5 Standard" entry in the model picker. You hover over Composer 2.5, click the small Edit button, and toggle Fast off. Or use `Ctrl+Alt+/`. Forum threads are full of people who did not know Standard existed until their credits vanished.
 

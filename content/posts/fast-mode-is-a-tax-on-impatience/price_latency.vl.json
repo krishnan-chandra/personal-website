@@ -1,148 +1,119 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "What a dollar of 'speed' actually buys",
+  "title": "Price multiplier vs. standard tier",
   "width": "container",
-  "height": 420,
-  "encoding": {
-    "x": {
-      "field": "price",
-      "type": "quantitative",
-      "title": "Price multiplier vs. standard",
-      "scale": { "domain": [0, 6.5], "nice": false, "padding": 12 }
-    },
-    "y": {
-      "field": "speed",
-      "type": "quantitative",
-      "title": "Speed multiplier vs. standard",
-      "scale": { "domain": [0, 3], "nice": false, "padding": 12 }
-    }
+  "height": 280,
+  "data": {
+    "values": [
+      {
+        "tier": "Batch / Flex (50% off)",
+        "label": "Batch / Flex",
+        "price": 0.5,
+        "kind": "Discount"
+      },
+      {
+        "tier": "Standard",
+        "label": "Standard",
+        "price": 1.0,
+        "kind": "Standard"
+      },
+      {
+        "tier": "Opus / Sol Fast (API)",
+        "label": "Opus / Sol Fast",
+        "price": 2.0,
+        "kind": "Fast"
+      },
+      {
+        "tier": "Codex subscription Fast",
+        "label": "Codex Fast (credits)",
+        "price": 2.5,
+        "kind": "Fast"
+      },
+      {
+        "tier": "Composer 2.5 Fast",
+        "label": "Composer 2.5 Fast",
+        "price": 6.0,
+        "kind": "Fast"
+      }
+    ]
   },
   "layer": [
     {
-      "data": {
-        "values": [
-          { "price": 0, "speed": 0 },
-          { "price": 3, "speed": 3 }
-        ]
-      },
-      "mark": { "type": "line", "strokeDash": [6, 4], "color": "#999999" }
+      "mark": { "type": "rule", "strokeDash": [5, 4], "color": "#999999" },
+      "encoding": {
+        "x": { "datum": 1 }
+      }
     },
     {
-      "data": {
-        "values": [
-          {
-            "tier": "Batch / Flex (50% off)",
-            "label": "Batch / Flex",
-            "price": 0.5,
-            "speed": 0.35,
-            "kind": "Discount",
-            "align": "center",
-            "baseline": "top",
-            "dx": 0,
-            "dy": 14
-          },
-          {
-            "tier": "Standard",
-            "label": "Standard",
-            "price": 1.0,
-            "speed": 1.0,
-            "kind": "Standard",
-            "align": "center",
-            "baseline": "top",
-            "dx": 0,
-            "dy": 14
-          },
-          {
-            "tier": "Opus / Sol Fast (advertised, output only)",
-            "label": "Opus / Sol Fast",
-            "price": 2.0,
-            "speed": 2.5,
-            "kind": "Fast",
-            "align": "left",
-            "baseline": "middle",
-            "dx": 14,
-            "dy": 0
-          },
-          {
-            "tier": "Codex subscription Fast",
-            "label": "Codex Fast (credits)",
-            "price": 2.5,
-            "speed": 1.5,
-            "kind": "Fast",
-            "align": "left",
-            "baseline": "middle",
-            "dx": 14,
-            "dy": 0
-          },
-          {
-            "tier": "Composer 2.5 Fast (at 2.5x claim)",
-            "label": "Composer 2.5 Fast",
-            "price": 6.0,
-            "speed": 2.5,
-            "kind": "Fast",
-            "align": "right",
-            "baseline": "middle",
-            "dx": -14,
-            "dy": 0
-          }
-        ]
+      "mark": {
+        "type": "bar",
+        "cornerRadiusEnd": 2,
+        "height": 22
       },
-      "layer": [
-        {
-          "mark": {
-            "type": "point",
-            "filled": true,
-            "size": 110,
-            "opacity": 1
+      "encoding": {
+        "y": {
+          "field": "label",
+          "type": "nominal",
+          "title": null,
+          "sort": { "field": "price", "order": "ascending" },
+          "scale": { "paddingInner": 0.35, "paddingOuter": 0.2 },
+          "axis": { "labelFontSize": 12, "ticks": false, "domain": false }
+        },
+        "x": {
+          "field": "price",
+          "type": "quantitative",
+          "title": "Price multiplier vs. standard",
+          "scale": { "domain": [0, 6.5] }
+        },
+        "color": {
+          "field": "kind",
+          "type": "nominal",
+          "title": "Tier type",
+          "scale": {
+            "domain": ["Discount", "Standard", "Fast"],
+            "range": ["#3f8f4f", "#333333", "#d64545"]
           },
-          "encoding": {
-            "color": {
-              "field": "kind",
-              "type": "nominal",
-              "title": "Tier type",
-              "scale": {
-                "domain": ["Discount", "Standard", "Fast"],
-                "range": ["#3f8f4f", "#333333", "#d64545"]
-              },
-              "legend": {
-                "orient": "bottom",
-                "direction": "horizontal",
-                "title": "Tier type",
-                "offset": 12
-              }
-            },
-            "tooltip": [
-              { "field": "tier", "title": "Tier" },
-              { "field": "price", "title": "Price multiplier" },
-              { "field": "speed", "title": "Speed multiplier" }
-            ]
+          "legend": {
+            "orient": "bottom",
+            "direction": "horizontal",
+            "title": "Tier type",
+            "offset": 8
           }
         },
-        {
-          "mark": {
-            "type": "text",
-            "fontSize": 11,
-            "fontWeight": 500,
-            "dx": { "expr": "datum.dx" },
-            "dy": { "expr": "datum.dy" },
-            "align": { "expr": "datum.align" },
-            "baseline": { "expr": "datum.baseline" }
-          },
-          "encoding": {
-            "text": { "field": "label" },
-            "color": {
-              "field": "kind",
-              "type": "nominal",
-              "legend": null
-            }
-          }
+        "tooltip": [
+          { "field": "tier", "title": "Tier" },
+          { "field": "price", "title": "Price multiplier" }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "middle",
+        "dx": 6,
+        "fontSize": 11,
+        "fontWeight": 500
+      },
+      "encoding": {
+        "y": {
+          "field": "label",
+          "type": "nominal",
+          "sort": { "field": "price", "order": "ascending" }
+        },
+        "x": { "field": "price", "type": "quantitative" },
+        "text": { "field": "price", "type": "quantitative", "format": ".1f" },
+        "color": {
+          "field": "kind",
+          "type": "nominal",
+          "legend": null
         }
-      ]
+      }
     }
   ],
   "config": {
     "view": { "stroke": null },
     "axis": { "grid": true, "gridOpacity": 0.35 },
-    "title": { "fontSize": 14, "offset": 12 }
+    "title": { "fontSize": 14, "offset": 10 }
   }
 }
