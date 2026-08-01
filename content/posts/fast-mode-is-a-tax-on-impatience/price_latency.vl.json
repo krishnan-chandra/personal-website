@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Price multiplier vs. standard tier",
+  "title": "Per-token cost vs. standard tier",
   "width": "container",
   "height": 280,
   "data": {
@@ -62,7 +62,7 @@
         "x": {
           "field": "price",
           "type": "quantitative",
-          "title": "Price multiplier vs. standard",
+          "title": "Cost multiplier vs. standard",
           "scale": { "domain": [0, 6.5] }
         },
         "color": {
@@ -82,7 +82,7 @@
         },
         "tooltip": [
           { "field": "tier", "title": "Tier" },
-          { "field": "price", "title": "Price multiplier" }
+          { "field": "price", "title": "Cost multiplier" }
         ]
       }
     },
