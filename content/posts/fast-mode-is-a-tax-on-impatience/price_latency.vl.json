@@ -2,19 +2,19 @@
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "title": "What a dollar of 'speed' actually buys",
   "width": "container",
-  "height": 380,
+  "height": 420,
   "encoding": {
     "x": {
       "field": "price",
       "type": "quantitative",
       "title": "Price multiplier vs. standard",
-      "scale": { "domain": [0, 6.5] }
+      "scale": { "domain": [0, 6.5], "nice": false, "padding": 12 }
     },
     "y": {
       "field": "speed",
       "type": "quantitative",
       "title": "Speed multiplier vs. standard",
-      "scale": { "domain": [0, 3] }
+      "scale": { "domain": [0, 3], "nice": false, "padding": 12 }
     }
   },
   "layer": [
@@ -36,7 +36,9 @@
             "price": 0.5,
             "speed": 0.35,
             "kind": "Discount",
-            "dx": -8,
+            "align": "center",
+            "baseline": "top",
+            "dx": 0,
             "dy": 14
           },
           {
@@ -45,35 +47,32 @@
             "price": 1.0,
             "speed": 1.0,
             "kind": "Standard",
-            "dx": 8,
+            "align": "center",
+            "baseline": "top",
+            "dx": 0,
             "dy": 14
           },
           {
             "tier": "Opus / Sol Fast (advertised, output only)",
-            "label": "Opus / Sol Fast (advertised)",
+            "label": "Opus / Sol Fast",
             "price": 2.0,
             "speed": 2.5,
             "kind": "Fast",
-            "dx": 8,
-            "dy": -10
-          },
-          {
-            "tier": "Fast (effective on agent loops)",
-            "label": "Fast (effective, agentic)",
-            "price": 2.0,
-            "speed": 1.2,
-            "kind": "Fast",
-            "dx": 8,
-            "dy": 14
+            "align": "left",
+            "baseline": "middle",
+            "dx": 14,
+            "dy": 0
           },
           {
             "tier": "Codex subscription Fast",
-            "label": "Codex sub Fast",
+            "label": "Codex Fast (credits)",
             "price": 2.5,
             "speed": 1.5,
             "kind": "Fast",
-            "dx": 8,
-            "dy": -4
+            "align": "left",
+            "baseline": "middle",
+            "dx": 14,
+            "dy": 0
           },
           {
             "tier": "Composer 2.5 Fast (at 2.5x claim)",
@@ -81,14 +80,21 @@
             "price": 6.0,
             "speed": 2.5,
             "kind": "Fast",
-            "dx": -90,
-            "dy": -4
+            "align": "right",
+            "baseline": "middle",
+            "dx": -14,
+            "dy": 0
           }
         ]
       },
       "layer": [
         {
-          "mark": { "type": "point", "filled": true, "size": 140 },
+          "mark": {
+            "type": "point",
+            "filled": true,
+            "size": 110,
+            "opacity": 1
+          },
           "encoding": {
             "color": {
               "field": "kind",
@@ -98,7 +104,12 @@
                 "domain": ["Discount", "Standard", "Fast"],
                 "range": ["#3f8f4f", "#333333", "#d64545"]
               },
-              "legend": { "orient": "top-right" }
+              "legend": {
+                "orient": "bottom",
+                "direction": "horizontal",
+                "title": "Tier type",
+                "offset": 12
+              }
             },
             "tooltip": [
               { "field": "tier", "title": "Tier" },
@@ -110,16 +121,20 @@
         {
           "mark": {
             "type": "text",
-            "align": "left",
-            "baseline": "middle",
             "fontSize": 11,
-            "fontWeight": "normal"
+            "fontWeight": 500,
+            "dx": { "expr": "datum.dx" },
+            "dy": { "expr": "datum.dy" },
+            "align": { "expr": "datum.align" },
+            "baseline": { "expr": "datum.baseline" }
           },
           "encoding": {
             "text": { "field": "label" },
-            "color": { "field": "kind", "type": "nominal", "legend": null },
-            "dx": { "field": "dx" },
-            "dy": { "field": "dy" }
+            "color": {
+              "field": "kind",
+              "type": "nominal",
+              "legend": null
+            }
           }
         }
       ]
@@ -127,6 +142,7 @@
   ],
   "config": {
     "view": { "stroke": null },
-    "axis": { "grid": true }
+    "axis": { "grid": true, "gridOpacity": 0.35 },
+    "title": { "fontSize": 14, "offset": 12 }
   }
 }

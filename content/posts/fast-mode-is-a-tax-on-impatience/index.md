@@ -66,7 +66,7 @@ This is the part of the pricing that is closest to "paying for something you do 
 
 **Cache re-pricing is a trap.** In Claude Code, enabling fast mode mid-conversation re-prices your entire cached context at the fast rate from the first token. Fast mode also draws from usage credits immediately and does not count against plan-included usage. That is the mechanism behind "drain your usage faster," and it is buried in the billing docs, not the marketing.
 
-On the chart above, the gap between "advertised OTPS" and "effective agentic speed" is mostly this input tax plus tool overhead. Even generous assumptions about generation speed leave fast mode above the fair-value line.
+That is why even the labs' advertised points sit in a worse place than they look. A 2.5x OTPS claim is output generation only. Once input is taxed at 2x and tool time is unchanged, wall-clock speed falls while the price multiplier stays put. Fast mode remains above the fair-value line.
 
 ## Two objections, two answers
 
