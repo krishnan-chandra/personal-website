@@ -68,16 +68,10 @@
         "color": {
           "field": "kind",
           "type": "nominal",
-          "title": "Tier",
+          "legend": null,
           "scale": {
             "domain": ["Standard", "Fast"],
             "range": ["#333333", "#d64545"]
-          },
-          "legend": {
-            "orient": "bottom",
-            "direction": "horizontal",
-            "title": "Tier",
-            "offset": 8
           }
         },
         "tooltip": [

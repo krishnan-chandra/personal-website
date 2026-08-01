@@ -8,19 +8,17 @@ description: "On a fixed subscription like Cursor Pro, fast mode burns included 
 
 Every major AI coding product now sells a "fast mode." Claude has `/fast`. Codex has `/fast on`. Cursor passes through fast variants of third-party models and ships its own fast toggle on Composer 2.5. The pitch is always the same: pay more, wait less.
 
-Whether that pitch is a good deal depends on who is paying.
+I think that pitch is a tax on impatience. Whether you can ignore it depends on who is paying.
 
-**Employer-backed developers** often have effectively unlimited token spend. A 2x or 6x queue surcharge is noise against salary. Burn rate barely registers. The real question is whether you are blocked waiting on a model, and routing plus parallelism answer that without a speed toggle.
+Employer-backed developers often have effectively unlimited token spend. A 2x or 6x queue surcharge is noise against salary. Burn rate barely registers. The real question is whether you are blocked waiting on a model. Routing and parallelism answer that without a speed toggle.
 
-**Subscription payers** live in a different economy. Cursor Pro is $20 a month. That is not an abstract API line item. It is a fixed monthly bucket of included usage, with overage rates that hurt when you blow through it. Every token choice is a trade inside the same cap: one session on Composer Fast, or six comparable sessions on Composer Standard for the same model and work. Fast mode does not add intelligence. It drains the bucket.
+Subscription payers live in a different economy. Cursor Pro is $20 a month. That is not an abstract API line item. It is a fixed monthly bucket of included usage, with overage rates that hurt when you blow through it. Every token choice is a trade inside the same cap: one session on Composer Fast, or six comparable sessions on Composer Standard for the same model and work. Fast mode does not add intelligence. It drains the bucket.
 
-This post is written for the second group. It is the story of how I learned to maximize the value of my $20 Cursor Pro subscription, and why fast mode turned out to be one of the worst places to spend inside that cap.
+This post is for subscription payers. It is the story of how I learned to maximize my $20 Cursor Pro subscription, and why fast mode turned out to be one of the worst spends inside that cap. For us it is also a tax on inattention, because the expensive tier is often on by default before you notice.
 
-I think the pitch is a tax on impatience. For subscription payers it is also a tax on inattention, because the expensive tier is often on by default before you notice.
+Not because fast mode is fake. The responses do arrive faster. The labs are unusually honest about what you are buying: same model, faster queue, higher per-token rate. The problem is what you buy with a scarce monthly pool. Most of the time, the better move is Standard throughput on the same model, a smaller model that answers the right question in one shot, or standard speed while you work on something else.
 
-Not because fast mode is fake. The responses do arrive faster. The labs are unusually honest about what you are buying: same model, faster queue, higher per-token rate. The problem is what you buy with a scarce monthly pool. Most of the time, the better move is a cheaper throughput tier of the same model, a smaller model that answers the right question in one shot, or standard speed while you work on something else.
-
-I drafted this post on Composer 2.5 Standard while running a second agent on another task. I never sat idle waiting for tokens. Not fast Opus. Not fast Sol. Not Composer Fast. That workflow is how I stretch the plan: parallel agents on Standard tiers, routed by task, with fast toggles off.
+I drafted this post on Composer 2.5 Standard while running a second agent on another task. I never sat idle waiting for tokens. Composer Fast stayed off. That is how I stretch the plan: parallel agents on Standard tiers, routed by task.
 
 ## What fast mode actually is
 
@@ -30,7 +28,7 @@ Claude's docs describe it as "up to 2.5x higher output tokens per second" on Opu
 
 You are not buying capability. You are buying queue priority at a higher per-token rate.
 
-On a $20 plan, that surcharge applies to every token in the month. On a company tab, it is usually irrelevant. The section below is the subscription-payer math: how fast mode shrinks what you can do before the cap runs out. Routing and parallelism later matter for both audiences.
+On a $20 plan, that surcharge hits every token in the month. The section below is subscription-payer math: how fast mode shrinks what you can do before the cap runs out.
 
 ## Fast mode shrinks what your plan can do
 
@@ -44,7 +42,7 @@ For a subscription payer, the question is not how fast tokens arrive. It is how 
 
 Hover a bar for the full tier name. The dashed line is Standard (1x). Each fast bar shows how many times more of your included usage the same session consumes. Codex fast is priced in subscription credits, not API dollars, but the logic is identical: more credits per token, fewer runs left in the bucket.
 
-**The rule I follow on my $20 plan: stay on Standard for everyday work, and maximize useful work per included token, not tokens per second.** I do not turn on fast unless something is genuinely break-glass.
+**The rule on my $20 plan: stay on Standard for everyday work, and maximize useful work per included token, not tokens per second.** I do not turn on fast unless something is genuinely break-glass.
 
 ## The cross-product math
 
@@ -64,13 +62,13 @@ The speed column is what the labs advertise for output generation. It does not c
 
 ## The input-token tax
 
-This is the part of the pricing that is closest to "paying for something you do not receive."
+This is the part of the pricing that is closest to paying for something you do not receive.
 
-**Input gets billed at the fast rate with no speed benefit.** Agent sessions resend large context every turn: system prompts, file reads, conversation history. In a typical long agent run, input tokens dominate volume. You pay 2x on all of it for a speed gain that applies only to output generation.
+Input gets billed at the fast rate with no speed benefit. Agent sessions resend large context every turn: system prompts, file reads, conversation history. In a typical long agent run, input tokens dominate volume. You pay 2x on all of it for a speed gain that applies only to output generation.
 
-**The speed gain is token generation, not end-to-end latency.** Anthropic is explicit that fast mode improves output tokens per second, not time to first token. For tool-calling agents, much of wall-clock time is tool execution, not streaming. A 2.5x OTPS gain on output generation does not translate to a 2.5x gain on the full run.
+The speed gain is token generation, not end-to-end latency. Anthropic is explicit that fast mode improves output tokens per second, not time to first token. For tool-calling agents, much of wall-clock time is tool execution, not streaming. A 2.5x OTPS gain on output generation does not translate to a 2.5x gain on the full run.
 
-**Cache re-pricing is a trap.** In Claude Code, enabling fast mode mid-conversation re-prices your entire cached context at the fast rate from the first token. Fast mode also draws from usage credits immediately and does not count against plan-included usage. That is the mechanism behind "drain your usage faster," and it is buried in the billing docs, not the marketing. Unlike the headline 2x multiplier, this can push real spend above what the chart shows.
+Cache re-pricing is a trap. In Claude Code, enabling fast mode mid-conversation re-prices your entire cached context at the fast rate from the first token. Fast mode also draws from usage credits immediately and does not count against plan-included usage. That is the mechanism behind "drain your usage faster," and it is buried in the billing docs, not the marketing. Unlike the headline 2x multiplier, this can push real spend above what the chart shows.
 
 The chart above shows what you pay per token. This section shows how little of the advertised speed that payment buys in an agent loop: input taxed at 2x with no corresponding speed benefit, output speedups that do not compound across tool calls, and cache traps that can re-price history you already paid for.
 
@@ -78,9 +76,9 @@ The chart above shows what you pay per token. This section shows how little of t
 
 There are two separate arguments against fast mode, and conflating them weakens both.
 
-**Argument 1 (empirical): the current multiples are bad.** Codex subscription fast mode charges 2.5x credits for the same tokens. Cursor's GPT-5.4 fast doubles the price for a 15% speed bump. Composer Fast charges 6x on identical weights. These numbers could change tomorrow, and some of them are objectively poor deals today.
+The empirical case is that the current multiples are bad. Codex subscription fast mode charges 2.5x credits for the same tokens. Cursor's GPT-5.4 fast doubles the price for a 15% speed bump. Composer Fast charges 6x on identical weights. These numbers could change tomorrow, and some of them are objectively poor deals today.
 
-**Argument 2 (structural): queue priority is the wrong thing to buy with scarce budget.** Given a fixed credit pool or monthly cap, marginal tokens go furthest on smarter model routing and cheaper models for narrow jobs, not sooner tokens on the model you already picked. A proportional 2x-for-2x fast tier might be "fair" in isolation and still be the wrong purchase when Nano answers your diagnostic question for pennies and Standard Composer covers another six sessions in the same bucket.
+The structural case is that queue priority is the wrong thing to buy with scarce budget. Given a fixed credit pool or monthly cap, marginal tokens go furthest on smarter model routing and cheaper models for narrow jobs, not sooner tokens on the model you already picked. A proportional 2x-for-2x fast tier might be "fair" in isolation and still be the wrong purchase when Nano answers your diagnostic question for pennies and Standard Composer covers another six sessions in the same bucket.
 
 I hold both. The first is about today's pricing. The second is about what you should optimize for regardless of how the labs price speed tomorrow.
 
@@ -103,7 +101,7 @@ Six times the price. Zero difference in intelligence. Cursor's own docs say the 
 
 Worse, Fast is on by default. There is no separate "Composer 2.5 Standard" entry in the model picker. You hover over Composer 2.5, click the small Edit button, and toggle Fast off. Or use `Ctrl+Alt+/`. Forum threads are full of people who did not know Standard existed until their credits vanished. The labs tax impatience. Cursor goes further and charges the tax by default, so you pay it without ever having been impatient.
 
-I drafted this post on Standard while reviewing another agent's output in parallel. Back-of-envelope token math for this session puts Standard around $0.10 and Fast around $0.60 for the same work. Same model. Six times the burn rate for tokens that arrived while I was already busy elsewhere.
+I drafted this post on Standard while reviewing another agent's output in parallel. <!-- replace before publish: swap with dashboard token counts --> Back-of-envelope token math for this session puts Standard around $0.10 and Fast around $0.60 for the same work. Same model. Six times the burn rate for tokens that arrived while I was already busy elsewhere.
 
 Fast mode does not make the model smarter. It makes the invoice arrive sooner.
 
@@ -113,9 +111,9 @@ If your employer pays, this is the section that still matters for you.
 
 The attention-economics defense of fast mode goes like this: if you bill $200/hour, saving two minutes of wait time on a $0.50 premium is obviously worth it.
 
-My answer is that I do not sit idle while a model runs. I parallelize. While one agent works, I prompt or review another. Generation latency stops being dead time because I am not waiting on a single serial pipeline. Fast mode and parallelism solve the same problem (time spent blocked on a model), and parallelism is free in dollars.
+My answer is that I do not sit idle while a model runs. I parallelize. While one agent works, I prompt or review another. Generation latency stops being dead time because I am not waiting on a single serial pipeline. Fast mode and parallelism solve the same problem, time spent blocked on a model. Parallelism is free in dollars and paid in a learnable skill.
 
-This is a learnable skill, not a universal workflow. Context-switching between agent sessions has real cost, and not everyone wants to run three agents at once. But for the way I work, fast mode has never beaten parallelism outside the break-glass case below, because I am rarely waiting in the first place.
+This is not a universal workflow. Context-switching between agent sessions has real cost, and not everyone wants to run three agents at once. But for the way I work, fast mode has never beaten parallelism outside the break-glass case below, because I am rarely waiting in the first place.
 
 The same logic applies to incidents. I do not reach for fast Opus first. I reach for Composer 2.5 or GPT-5.4 Nano to diagnose quickly and cheaply. If the bug needs a frontier model, I escalate then, or fan out small and large models on the same diagnostic question in parallel and take whichever answers well first. Fast mode is not step one. It is not step two. It is break-glass.
 
@@ -154,14 +152,14 @@ That happens rarely. Break-glass tools are supposed to be expensive per use. At 
 
 These are the defaults I settled on after burning through included usage too fast on Composer Fast:
 
-1. **Turn off fast toggles by default.** Claude `/fast` off. Codex `/fast off`. Composer Fast off via the hidden toggle.
+1. **Composer Fast off in Cursor.** Hover Composer 2.5, open Edit, toggle Fast off. Or `Ctrl+Alt+/`.
 2. **Stay on Standard throughput tiers.** Everyday interactive work on Standard, not Fast. Fast only for break-glass.
 3. **Route by task, not by impatience.** Cheap models for narrow questions. Frontier models at standard speed for hard problems. Composer Standard for everyday agentic coding in Cursor.
 4. **Parallelize instead of paying for speed.** Multiple agents, multiple models, fan-out on diagnostics. Do not sit idle waiting for one serial pipeline.
-5. **Watch the billing traps.** Fast mode on Claude Code draws from usage credits from token one. Toggling mid-conversation re-prices your entire cached context at the fast rate.
+5. **Watch the billing traps.** I also use Claude Code and Codex on separate plans; there fast mode draws from usage credits from token one, and toggling mid-conversation re-prices your entire cached context at the fast rate.
 
 ## Coming next
 
 This post is the economics and the pattern behind stretching a $20 plan. Before publish I will replace the back-of-envelope dollar figures here with dashboard numbers. The follow-up will walk through a real task end to end on Cursor Pro: which models I used at each step, what fast mode would have cost against my monthly bucket, and what I actually spent.
 
-If you are on a fixed subscription and defaulting to fast mode because waiting feels bad, you are probably reaching for the wrong tool. The labs want you to pay more per token for the same model. You want the right model at Standard speed, so more of your monthly cap turns into finished work. Those are not the same thing. If your employer pays, the burn-rate argument may not bite, but the routing, parallelism, and break-glass defaults still apply.
+If you are on a fixed subscription and defaulting to fast mode because waiting feels bad, you are probably reaching for the wrong tool. The labs want you to pay more per token for the same model. You want the right model at Standard speed, so more of your monthly cap turns into finished work. Those are not the same thing.
