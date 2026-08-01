@@ -1,18 +1,12 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "title": "Per-token cost vs. standard tier",
+  "title": "How much more fast mode burns vs. Standard",
   "width": "container",
-  "height": 280,
+  "height": 260,
   "data": {
     "values": [
       {
-        "tier": "Batch / Flex (50% off)",
-        "label": "Batch / Flex",
-        "price": 0.5,
-        "kind": "Discount"
-      },
-      {
-        "tier": "Standard",
+        "tier": "Standard (baseline)",
         "label": "Standard",
         "price": 1.0,
         "kind": "Standard"
@@ -20,6 +14,12 @@
       {
         "tier": "Opus / Sol Fast (API)",
         "label": "Opus / Sol Fast",
+        "price": 2.0,
+        "kind": "Fast"
+      },
+      {
+        "tier": "Cursor GPT-5.4 Fast",
+        "label": "GPT-5.4 Fast",
         "price": 2.0,
         "kind": "Fast"
       },
@@ -62,27 +62,27 @@
         "x": {
           "field": "price",
           "type": "quantitative",
-          "title": "Cost multiplier vs. standard",
+          "title": "Included usage consumed vs. Standard",
           "scale": { "domain": [0, 6.5] }
         },
         "color": {
           "field": "kind",
           "type": "nominal",
-          "title": "Tier type",
+          "title": "Tier",
           "scale": {
-            "domain": ["Discount", "Standard", "Fast"],
-            "range": ["#3f8f4f", "#333333", "#d64545"]
+            "domain": ["Standard", "Fast"],
+            "range": ["#333333", "#d64545"]
           },
           "legend": {
             "orient": "bottom",
             "direction": "horizontal",
-            "title": "Tier type",
+            "title": "Tier",
             "offset": 8
           }
         },
         "tooltip": [
           { "field": "tier", "title": "Tier" },
-          { "field": "price", "title": "Cost multiplier" }
+          { "field": "price", "title": "Usage multiplier" }
         ]
       }
     },
