@@ -22,9 +22,9 @@ Claude's docs describe it as "up to 2.5x higher output tokens per second" on Opu
 
 You are not buying capability. You are buying queue priority at a higher per-token rate.
 
-That would be fine if you had unlimited budget and wall-clock were your only constraint. Most developers have a fixed monthly pool, usage credits, or a mental cap like "$20 before I check the dashboard." In that world, fast mode trades work you could have done for speed you may not need.
+That would be fine if you had unlimited budget and wall-clock were your only constraint. Most developers have a fixed monthly pool, usage credits, or a mental cap like "$20 before I check the dashboard." In that world, fast mode trades work you could have done for speed you may not need. If your employer's budget is effectively unlimited, the burn-rate argument may not move you. The parallelism section later still applies: fast mode is not buying capacity you were not already getting for free.
 
-## A fixed budget buys less up the stack
+## A fixed budget buys less on higher tiers
 
 Token products are priced in tiers, not a single knob. The labs sell below Standard and above Standard.
 
@@ -34,7 +34,7 @@ In the middle sits Standard: the default synchronous tier.
 
 Above Standard sits Fast mode: 2x API pricing for Claude and Sol, 2.5x Codex subscription credits, 6x for Composer 2.5 Fast on the same model weights.
 
-The asymmetry matters for spend, not speed. Going *down* the stack doubles the tokens your budget can buy on work that does not need a human staring at the screen. Going *up* shrinks your pool for the same prompts and outputs.
+The asymmetry matters for spend, not speed. Going *down* the tier ladder doubles the tokens your budget can buy on work that does not need a human staring at the screen. Going *up* shrinks your pool for the same prompts and outputs.
 
 {{< vega id="tier-cost" file="price_latency.vl.json" >}}
 
@@ -50,11 +50,11 @@ Here is what the labs publish today. Sources: [Anthropic fast mode docs](https:/
 | --- | --- | --- | --- | --- | --- |
 | Claude Opus 5 (API) | $5 / $25 per MTok | $10 / $50 per MTok | 2x | Up to 2.5x output tokens/sec | Input taxed at 2x with no stated speed benefit. Gain is OTPS, not time-to-first-token. |
 | Codex / GPT-5.6 Sol (API) | $5 / $30 per MTok | $10 / $60 per MTok | 2x | Up to 2.5x | Same model, same intelligence. |
-| Codex (subscription credits) | 1x credits | 2.5x credits (5.6 / 5.5) | 2.5x | 1.5x speed | Worst burn rate in the table for subscription users. |
+| Codex (subscription credits) | 1x credits | 2.5x credits on GPT-5.6 / 5.5 | 2.5x | 1.5x speed | Worst burn rate in the table for subscription users. |
 | Cursor GPT-5.4 fast | $2.50 / $15 per MTok | 2x standard | 2x | 15% faster | Double the spend for the same tokens. |
 | Cursor Composer 2.5 | $0.50 / $2.50 per MTok | $3.00 / $15.00 per MTok | 6x | Not published | Same model. Fast is the default. Toggle is hidden. |
 
-Read the table as budget depletion, not a speed scorecard. Every multiplier applies to every token in a session. On a $20 pool, Composer Fast exhausts it six times faster than Standard for the same model and the same work. Codex subscription fast spends 2.5x the credits per token. API fast modes double the burn rate before you count input-token surcharges.
+Read the table as budget depletion, not a speed scorecard. Every multiplier applies to every token in a session. On a $20 pool, the same session costs six times as much on Composer Fast as on Standard for the same model and work. Codex subscription fast spends 2.5x the credits per token. API fast modes double the burn rate before you count input-token surcharges.
 
 The speed column is what the labs advertise for output generation. It does not change the spend math. You pay the multiplier on the full session either way.
 
@@ -147,13 +147,13 @@ That happens rarely. Break-glass tools are supposed to be expensive per use. At 
 ## What I am doing instead
 
 1. **Turn off fast toggles by default.** Claude `/fast` off. Codex `/fast off`. Composer Fast off via the hidden toggle.
-2. **Route down the stack.** Batch and Flex for bulk work at 50% off. Standard for interactive work. Nothing above Standard unless break-glass.
+2. **Route down the tier ladder.** Batch and Flex for bulk work at 50% off. Standard for interactive work. Nothing above Standard unless break-glass.
 3. **Route by task, not by impatience.** Cheap models for narrow questions. Frontier models at standard speed for hard problems. Composer Standard for everyday agentic coding in Cursor.
 4. **Parallelize instead of paying for speed.** Multiple agents, multiple models, fan-out on diagnostics. Do not sit idle waiting for one serial pipeline.
 5. **Watch the billing traps.** Fast mode on Claude Code draws from usage credits from token one. Toggling mid-conversation re-prices your entire cached context at the fast rate.
 
 ## Coming next
 
-This post is the economics and the pattern. The follow-up will walk through a real task end to end: which models I used at each step, what fast mode would have cost, and what I actually spent.
+This post is the economics and the pattern. The follow-up will walk through a real task end to end: which models I used at each step, what fast mode would have cost, and what I actually spent, with dashboard numbers to replace the back-of-envelope estimates here.
 
 If you are defaulting to fast mode because waiting feels bad, you are probably reaching for the wrong tool. The labs want you to pay more per token for the same model. You want the right model at the right step, on the tier that stretches your budget furthest. Those are not the same thing.
