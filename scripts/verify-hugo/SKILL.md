@@ -1,6 +1,6 @@
 # Verify Hugo personal site
 
-Canonical verification docs for this repository. Cursor discovers the skill via [`.cursor/skills/verify-hugo-site/SKILL.md`](../.cursor/skills/verify-hugo-site/SKILL.md); scripts and the feature map live here.
+Canonical verification docs for this repository. Agents discover the skill via [`.agents/skills/verify-hugo-site/SKILL.md`](../../.agents/skills/verify-hugo-site/SKILL.md); scripts and the feature map live here.
 
 Static blog at [krishnanchandra.com](https://krishnanchandra.com), built with [Hugo Extended](https://gohugo.io/installation/) and the `hugo-blog-awesome` theme fork. Primary surface: **web UI** served by Hugo's embedded dev server.
 

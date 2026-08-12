@@ -5,7 +5,7 @@ description: Drive Krishnan Chandra's Hugo personal site locally — launch the 
 
 # Verify Hugo personal site
 
-Project-local verification for this repository. Scripts and the feature map live under [`scripts/verify-hugo/`](../../scripts/verify-hugo/); this file is the Cursor skill entry point.
+Project-local verification for this repository. Scripts and the feature map live under [`scripts/verify-hugo/`](../../scripts/verify-hugo/); this file is the agent skill entry point.
 
 **Read first:** [`scripts/verify-hugo/features/README.md`](../../scripts/verify-hugo/features/README.md)  
 **Full instructions:** [`scripts/verify-hugo/SKILL.md`](../../scripts/verify-hugo/SKILL.md)

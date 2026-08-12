@@ -34,7 +34,7 @@ npm install && npx playwright install chromium   # once per machine
 scripts/verify-hugo/bin/verify-hugo-proof.sh     # full regression
 ```
 
-See [`scripts/verify-hugo/SKILL.md`](scripts/verify-hugo/SKILL.md) for details. Cursor loads the skill from [`.cursor/skills/verify-hugo-site/`](.cursor/skills/verify-hugo-site/SKILL.md).
+See [`scripts/verify-hugo/SKILL.md`](scripts/verify-hugo/SKILL.md) for details. Agents load the skill from [`.agents/skills/verify-hugo-site/`](.agents/skills/verify-hugo-site/SKILL.md).
 
 ## Deployment
 
